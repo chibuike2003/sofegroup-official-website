@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofe Group - Consult</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light blue-gray background */
+        }
+        .consult-hero-bg {
+            background-image: url('https://placehold.co/1920x1080/1e3a8a/FFFFFF?text=CONSULT+WITH+SOFE'); /* Placeholder image for consult */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        /* Custom colors for better control if needed, otherwise Tailwind defaults are fine */
+        .bg-sofe-blue { background-color: #1e3a8a; } /* Darker blue */
+        .text-sofe-blue { color: #1e3a8a; }
+        .bg-sofe-orange { background-color: #f97316; } /* Vibrant orange */
+        .text-sofe-orange { color: #f97316; }
+        .border-sofe-blue { border-color: #1e3a8a; }
+        .hover\:bg-sofe-orange-dark:hover { background-color: #ea580c; } /* Darker orange on hover */
+        .hover\:bg-sofe-blue-dark:hover { background-color: #172554; } /* Darker blue on hover */
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md py-4 px-6 md:px-12 fixed w-full z-50">
+        <nav class="container mx-auto flex justify-between items-center flex-wrap">
+            <div class="flex items-center flex-shrink-0 text-sofe-blue mr-6">
+                <span class="font-extrabold text-3xl tracking-tight">Sofe Group</span>
+            </div>
+            <div class="block lg:hidden">
+                <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-sofe-blue border-sofe-blue hover:text-sofe-orange hover:border-sofe-orange">
+                    <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                </button>
+            </div>
+            <div id="nav-content" class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-4 lg:mt-0">
+                <div class="text-lg lg:flex-grow">
+                    <a href="index.html#home" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Home</a>
+                    <a href="index.html#services" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Services</a>
+                    <a href="consult.html" class="block mt-4 lg:inline-block lg:mt-0 text-sofe-orange font-bold mr-6 transition duration-300 ease-in-out">Consult</a> <a href="event.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Events</a>
+                    <a href="index.html#about-us" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">About Us</a>
+                </div>
+                <div>
+                    <a href="login.html" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Login/Sign up</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="consult-hero-bg relative text-white flex items-center justify-center min-h-screen py-20 pt-32 lg:pt-0">
+        <div class="absolute inset-0 bg-black opacity-60"></div>
+        <div class="container mx-auto text-center relative z-10 px-6">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 drop-shadow-2xl">
+                Unlock Your Potential with Expert Consultation
+            </h1>
+            <p class="text-xl md:text-2xl lg:text-3xl font-medium mb-10 max-w-3xl mx-auto drop-shadow-lg">
+                Gain strategic insights and tailored solutions for your blockchain and tech ventures.
+            </p>
+            <a href="#consultation-form-section" class="inline-block bg-sofe-orange hover:bg-sofe-orange-dark text-white font-bold py-4 px-10 rounded-full text-xl transition duration-300 ease-in-out shadow-xl transform hover:scale-105">
+                Book a Free Consultation
+            </a>
+        </div>
+    </section>
+
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-sofe-blue mb-16">Why Consult with Sofe Group?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center transform hover:scale-105 transition duration-300 ease-in-out border-t-4 border-sofe-orange">
+                    <h3 class="text-3xl font-bold text-sofe-blue mb-4">Deep Expertise</h3>
+                    <p class="text-gray-600 leading-relaxed">Leverage our extensive knowledge in blockchain, Web3, AI, and emerging technologies to navigate complex landscapes and identify opportunities.</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center transform hover:scale-105 transition duration-300 ease-in-out border-t-4 border-sofe-blue">
+                    <h3 class="text-3xl font-bold text-sofe-blue mb-4">Tailored Solutions</h3>
+                    <p class="text-gray-600 leading-relaxed">Receive personalized strategies and actionable plans designed specifically for your unique business goals and challenges.</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center transform hover:scale-105 transition duration-300 ease-in-out border-t-4 border-sofe-orange">
+                    <h3 class="text-3xl font-bold text-sofe-blue mb-4">Future-Proof Your Business</h3>
+                    <p class="text-gray-600 leading-relaxed">Stay ahead of the curve with insights into future trends and innovative solutions that ensure long-term growth and relevance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-sofe-blue mb-16">Our Consultation Process</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="bg-gray-50 rounded-xl shadow-md p-8 flex flex-col items-center">
+                    <div class="text-sofe-orange text-6xl font-bold mb-4">1</div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-3">Initial Discovery Call</h3>
+                    <p class="text-gray-700 leading-relaxed">Share your vision, challenges, and objectives with our team in a brief introductory session.</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl shadow-md p-8 flex flex-col items-center">
+                    <div class="text-sofe-orange text-6xl font-bold mb-4">2</div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-3">Strategic Planning</h3>
+                    <p class="text-gray-700 leading-relaxed">We'll analyze your needs and develop a customized consultation plan tailored to your specific requirements.</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl shadow-md p-8 flex flex-col items-center">
+                    <div class="text-sofe-orange text-6xl font-bold mb-4">3</div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-3">Actionable Insights</h3>
+                    <p class="text-gray-700 leading-relaxed">Receive expert guidance, practical recommendations, and a clear roadmap for execution.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="consultation-form-section" class="py-20 bg-sofe-blue text-white flex items-center justify-center">
+        <div class="container mx-auto px-6 max-w-2xl">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-8 text-center">Schedule Your Consultation Now</h2>
+            <p class="text-xl md:text-2xl mb-12 text-center max-w-3xl mx-auto">
+                Fill out the form below, and our team will get in touch to arrange your personalized consultation.
+            </p>
+            <div class="bg-white rounded-xl shadow-xl p-8 md:p-10 border-t-4 border-sofe-orange text-gray-800">
+                <form action="#" method="POST" class="space-y-6">
+                    <div>
+                        <label for="consult-name" class="block text-lg font-medium text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="consult-name" name="name" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange text-lg" placeholder="John Doe" required>
+                    </div>
+                    <div>
+                        <label for="consult-email" class="block text-lg font-medium text-gray-700 mb-2">Email Address</label>
+                        <input type="email" id="consult-email" name="email" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange text-lg" placeholder="you@example.com" required>
+                    </div>
+                    <div>
+                        <label for="consult-phone" class="block text-lg font-medium text-gray-700 mb-2">Phone Number (Optional)</label>
+                        <input type="tel" id="consult-phone" name="phone" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange text-lg" placeholder="+234 801 234 5678">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="consult-date" class="block text-lg font-medium text-gray-700 mb-2">Preferred Date</label>
+                            <input type="date" id="consult-date" name="date" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange text-lg" required>
+                        </div>
+                        <div>
+                            <label for="consult-time" class="block text-lg font-medium text-gray-700 mb-2">Preferred Time</label>
+                            <input type="time" id="consult-time" name="time" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange text-lg" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="consult-message" class="block text-lg font-medium text-gray-700 mb-2">Your Message / Specific Needs</label>
+                        <textarea id="consult-message" name="message" rows="5" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange text-lg" placeholder="Tell us more about your consultation needs..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-sofe-orange hover:bg-sofe-orange-dark text-white font-bold py-4 px-6 rounded-full text-xl transition duration-300 ease-in-out shadow-lg transform hover:scale-105">
+                        Submit Consultation Request
+                    </button>
+                </form>
+                <p class="mt-8 text-center text-lg text-gray-600">
+                    Need immediate assistance? <a href="contact.html" class="text-sofe-blue hover:underline font-semibold">Contact us directly</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-sofe-blue text-white py-10 px-6">
+        <div class="container mx-auto text-center">
+            <p class="text-lg mb-4">&copy; 2023 Sofe Group. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Privacy Policy</a>
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Terms of Service</a>
+                <a href="contact.html" class="hover:text-sofe-orange transition duration-300 ease-in-out">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Mobile navigation toggle
+        document.getElementById('nav-toggle').onclick = function () {
+            document.getElementById('nav-content').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

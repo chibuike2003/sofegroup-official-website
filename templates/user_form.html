@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-gray-800 p-4 text-white">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('admin_dashboard') }}" class="text-2xl font-bold">Admin Panel</a>
+            <div>
+                <a href="{{ url_for('admin_dashboard') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Dashboard</a>
+                <a href="{{ url_for('all_users') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Users</a>
+                <a href="{{ url_for('view_hire_inquiries') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Hire Inquiries</a>
+                <a href="{{ url_for('view_contact_inquiries') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Contact Inquiries</a>
+                <a href="{{ url_for('view_help_requests') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Help Requests</a>
+                <a href="{{ url_for('view_testimonials') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Testimonials</a>
+                <a href="{{ url_for('logout') }}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md ml-4">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-4">
+                    {% for category, message in messages %}
+                        <div class="p-3 mb-2 rounded {% if category == 'danger' %}bg-red-100 text-red-700{% elif category == 'success' %}bg-green-100 text-green-700{% elif category == 'warning' %}bg-yellow-100 text-yellow-700{% elif category == 'info' %}bg-blue-100 text-blue-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Edit User: {{ user.name }}</h1>
+        <div class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+            <form action="{{ url_for('edit_user', user_id=user.id) }}" method="POST">
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                    <input type="text" id="name" name="name" value="{{ user.name }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="referral_code" class="block text-gray-700 text-sm font-bold mb-2">Referral Code:</label>
+                    <input type="text" id="referral_code" name="referral_code" value="{{ user.referral_code }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">New Password (leave blank to keep current):</label>
+                    <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Is Admin?</label>
+                    <div class="mt-2">
+                        <label class="inline-flex items-center">
+                            <input type="radio" class="form-radio" name="is_admin" value="false" {% if not user.is_admin %}checked{% endif %}>
+                            <span class="ml-2">No</span>
+                        </label>
+                        <label class="inline-flex items-center ml-6">
+                            <input type="radio" class="form-radio" name="is_admin" value="true" {% if user.is_admin %}checked{% endif %}>
+                            <span class="ml-2">Yes</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Update User</button>
+            </form>
+        </div>
+        <div class="mt-6 text-center">
+            <a href="{{ url_for('view_user', user_id=user.id) }}" class="text-blue-500 hover:text-blue-700">Back to User Details</a>
+        </div>
+    </div>
+</body>
+</html>

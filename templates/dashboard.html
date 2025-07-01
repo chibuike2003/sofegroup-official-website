@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom font import for Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+        /* Custom scrollbar for sidebar */
+        .sidebar-nav::-webkit-scrollbar {
+            width: 8px;
+        }
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: #1f2937; /* bg-gray-800 */
+            border-radius: 10px;
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: #4b5563; /* bg-gray-600 */
+            border-radius: 10px;
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* bg-gray-500 */
+        }
+
+        /* Pop-up specific styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50; /* Higher than other elements */
+            transition: opacity 0.3s ease-in-out;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .popup-content {
+            background-color: white;
+            padding: 2.5rem; /* Equivalent to p-10 */
+            border-radius: 0.75rem; /* Equivalent to rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Equivalent to shadow-xl */
+            text-align: center;
+            max-width: 90%; /* Responsive width */
+            width: 400px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-in-out;
+        }
+        .popup-overlay.active .popup-content {
+            transform: translateY(0);
+        }
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #9ca3af; /* gray-400 */
+        }
+        .popup-close:hover {
+            color: #4b5563; /* gray-600 */
+        }
+
+        /* Bank details modal specific adjustments */
+        #bank-details-modal .popup-content {
+            width: 500px; /* Wider for the form */
+            text-align: left; /* Align form elements to the left */
+        }
+        #bank-details-modal .form-group {
+            margin-bottom: 1rem;
+        }
+        #bank-details-modal .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151; /* gray-700 */
+        }
+        #bank-details-modal .form-group input,
+        #bank-details-modal .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            font-size: 1rem;
+            color: #374151;
+            background-color: #f9fafb; /* gray-50 */
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        #bank-details-modal .form-group input:focus,
+        #bank-details-modal .form-group select:focus {
+            outline: none;
+            border-color: #6366f1; /* indigo-500 */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        #bank-details-modal button[type="submit"] {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            margin-top: 1.5rem;
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        #bank-details-modal button[type="submit"]:hover {
+            background-color: #4338ca; /* indigo-700 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col lg:flex-row">
+
+    <aside class="w-full lg:w-64 bg-gray-900 text-white p-4 flex flex-col shadow-lg rounded-r-lg lg:rounded-r-none lg:rounded-bl-lg">
+        <div class="flex items-center justify-between lg:justify-center mb-6">
+            <h1 class="text-2xl font-bold text-indigo-400">Dashboard</h1>
+            <button id="mobile-menu-button" class="lg:hidden text-white focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <nav id="sidebar-nav-links" class="sidebar-nav flex-grow overflow-y-auto hidden lg:block">
+            <ul class="space-y-3">
+                <li>
+                    <a href="{{ url_for('dashboard') }}" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out">
+                        <i class="fas fa-home mr-3 text-lg"></i>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('courses') }}" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out">
+                        <i class="fas fa-book mr-3 text-lg"></i>
+                        Courses
+                    </a>
+                </li>
+                <li>
+                    <a href="analytics.html" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out">
+                        <i class="fas fa-chart-line mr-3 text-lg"></i>
+                        Analytics
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('courses') }}" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out">
+                        <i class="fas fa-tasks mr-3 text-lg"></i>
+                        Projects
+                    </a>
+                </li>
+                <li>
+                    <a href="messages.html" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out">
+                        <i class="fas fa-envelope mr-3 text-lg"></i>
+                        Messages
+                        <span class="ml-auto bg-indigo-600 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">5</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('testimonial') }}" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out">
+                        <i class="fas fa-pen-nib mr-3 text-lg"></i>
+                        Give Testimonial
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out">
+                        <i class="fas fa-users mr-3 text-lg"></i>
+                        Team
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out">
+                        <i class="fas fa-cog mr-3 text-lg"></i>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <button id="link-account-button" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out w-full text-left">
+                        <i class="fas fa-university mr-3 text-lg"></i>
+                        Link Account
+                    </button>
+                </li>
+                <li>
+                    <a href="{{ url_for('contact_support') }}" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out">
+                        <i class="fas fa-question-circle mr-3 text-lg"></i>
+                        Help
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('logout') }}" class="flex items-center p-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition duration-200 ease-in-out">
+                        <i class="fas fa-sign-out-alt mr-3 text-lg"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="flex-1 flex flex-col">
+        <header class="bg-white shadow-md p-4 flex items-center justify-between rounded-bl-lg lg:rounded-bl-none lg:rounded-tr-lg">
+            <div class="relative w-full max-w-md">
+                <input type="text" placeholder="Search anything..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 hover:text-indigo-600 transition duration-200 ease-in-out">
+                    <i class="fas fa-bell text-xl"></i>
+                </button>
+                <div class="relative">
+                    <img src="https://placehold.co/40x40/FF7F50/FFFFFF?text=JD" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-indigo-500 cursor-pointer" onclick="toggleProfileDropdown()">
+                    <div id="profile-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-10 hidden">
+                        <a href="profile.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profile</a>
+                        <div class="border-t border-gray-200 my-1"></div>
+                        <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-6 bg-gray-100 overflow-y-auto">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Overview</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-4">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }} {{ user.name }}</div>Your Referral code is {{ user.referral_code }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Sales</p>
+                        <p class="text-2xl font-bold text-gray-900">$12,450</p>
+                    </div>
+                    <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                        <i class="fas fa-dollar-sign text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">New Users</p>
+                        <p class="text-2xl font-bold text-gray-900">325</p>
+                    </div>
+                    <div class="bg-green-100 text-green-600 p-3 rounded-full">
+                        <i class="fas fa-user-plus text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Orders Pending</p>
+                        <p class="text-2xl font-bold text-gray-900">18</p>
+                    </div>
+                    <div class="bg-yellow-100 text-yellow-600 p-3 rounded-full">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Support Tickets</p>
+                        <p class="text-2xl font-bold text-gray-900">7</p>
+                    </div>
+                    <div class="bg-red-100 text-red-600 p-3 rounded-full">
+                        <i class="fas fa-headset text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Sales Performance</h3>
+                    <div class="bg-gray-50 h-64 flex items-center justify-center rounded-lg text-gray-400">
+                        <p>Chart Placeholder (e.g., Line Chart)</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-800 font-medium">New user registered: <span class="font-normal text-gray-600">John Doe</span></p>
+                                <p class="text-gray-500 text-sm">2 hours ago</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-800 font-medium">Order #1234 completed</p>
+                                <p class="text-gray-500 text-sm">Yesterday</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mr-3">
+                                <i class="fas fa-exclamation"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-800 font-medium">Payment failed for <span class="font-normal text-gray-600">Subscription X</span></p>
+                                <p class="text-gray-500 text-sm">3 days ago</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-white p-4 text-center text-gray-600 text-sm shadow-inner rounded-t-lg lg:rounded-t-none lg:rounded-br-lg mt-auto">
+            &copy; 2025 Dashboard. All rights reserved.
+        </footer>
+    </div>
+
+    <div id="bank-details-modal" class="popup-overlay hidden">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closePopup('bank-details-modal')">
+                &times;
+            </button>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Link Your Bank Account</h2>
+            <form action="{{ url_for('link_bank_account') }}" method="POST">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="mb-4">
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">{{ message }} {{ user.name }}</div>Your Referral code is {{ user.referral_code }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% endwith %}
+                <div class="form-group">
+                    <label for="bank_name">Bank Name</label>
+                    <input type="text" id="bank_name" name="bank_name" placeholder="e.g., Access Bank Plc" required>
+                </div>
+                <div class="form-group">
+                    <label for="account_name">Account Name</label>
+                    <input type="text" id="account_name" name="account_name" placeholder="Your Full Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="account_number">Account Number</label>
+                    <input type="text" id="account_number" name="account_number" placeholder="0123456789" pattern="\d{10}" title="Account number must be 10 digits" required>
+                </div>
+                <div class="form-group">
+                    <label for="account_type">Account Type</label>
+                    <select id="account_type" name="account_type" required>
+                        <option value="">Select Account Type</option>
+                        <option value="savings">Savings Account</option>
+                        <option value="current">Current Account</option>
+                        <option value="domiciliary">Domiciliary Account</option>
+                    </select>
+                </div>
+                <button type="submit">Submit Bank Details</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const sidebarNavLinks = document.getElementById('sidebar-nav-links');
+
+        mobileMenuButton.addEventListener('click', () => {
+            sidebarNavLinks.classList.toggle('hidden');
+            sidebarNavLinks.classList.toggle('flex'); /* Use flex for vertical layout on mobile */
+            sidebarNavLinks.classList.toggle('flex-col');
+            sidebarNavLinks.classList.toggle('absolute'); /* Make it overlay content */
+            sidebarNavLinks.classList.toggle('top-16'); /* Adjust based on header height */
+            sidebarNavLinks.classList.toggle('left-0');
+            sidebarNavLinks.classList.toggle('w-full');
+            sidebarNavLinks.classList.toggle('bg-gray-900');
+            sidebarNavLinks.classList.toggle('z-20'); /* Ensure it's above other content */
+            sidebarNavLinks.classList.toggle('p-4');
+            sidebarNavLinks.classList.toggle('rounded-b-lg');
+            sidebarNavLinks.classList.toggle('h-[calc(100vh-64px)]'); /* Full height minus header */
+        });
+
+        // JavaScript for profile dropdown toggle
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profile-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown if clicked outside
+        window.addEventListener('click', function(event) {
+            const avatar = document.querySelector('img[alt="User Avatar"]');
+            const dropdown = document.getElementById('profile-dropdown');
+            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Close mobile menu if resized to desktop or clicked outside
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) { // Tailwind's 'lg' breakpoint
+                sidebarNavLinks.classList.remove('hidden', 'flex', 'flex-col', 'absolute', 'top-16', 'left-0', 'w-full', 'bg-gray-900', 'z-20', 'p-4', 'rounded-b-lg', 'h-[calc(100vh-64px)]');
+                sidebarNavLinks.classList.add('block');
+            } else {
+                // Ensure it's hidden on mobile if not explicitly opened
+                if (!sidebarNavLinks.classList.contains('flex')) {
+                   sidebarNavLinks.classList.add('hidden');
+                }
+            }
+        });
+
+        // --- Pop-up JavaScript (Adjusted for remaining modals) ---
+        // Removed profileUpdatePopup variable as the modal is removed.
+        const bankDetailsModal = document.getElementById('bank-details-modal');
+        // Removed profilePopupShown flag as the profile modal is removed.
+
+        function showPopup(popupId) {
+            const popup = document.getElementById(popupId);
+            if (popup) {
+                // No special handling needed for profile-update-popup anymore
+                popup.classList.add('active');
+                popup.classList.remove('hidden');
+            }
+        }
+
+        function closePopup(popupId) {
+            const popup = document.getElementById(popupId);
+            if (popup) {
+                popup.classList.remove('active');
+                // Give it a moment to fade out before hiding completely
+                setTimeout(() => {
+                    popup.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Event listener for "Link Account" button
+        document.getElementById('link-account-button').addEventListener('click', () => {
+            showPopup('bank-details-modal');
+        });
+
+        // Removed the setTimeout call that showed the profile update pop-up
+        // setTimeout(() => showPopup('profile-update-popup'), 10000); // Removed
+    </script>
+</body>
+</html>

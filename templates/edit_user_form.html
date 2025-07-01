@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOFE GROUP Admin - Edit User</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Custom CSS for Dashboard Theme -->
+    <style>
+        /* Custom CSS from the main dashboard for consistent styling */
+        :root {
+            --sofe-primary: #3498db; /* A representative blue */
+            --sofe-secondary: #2c3e50; /* Darker tone for contrast */
+            --sofe-text: #333;
+            --sofe-light-bg: #f8f9fa;
+            --sofe-border: #dee2e6;
+        }
+
+        body {
+            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--sofe-text);
+            background-color: var(--sofe-light-bg);
+        }
+
+        #wrapper {
+            display: flex;
+        }
+
+        #sidebar-wrapper {
+            min-height: 100vh;
+            margin-left: -15rem;
+            transition: margin .25s ease-out;
+            width: 15rem;
+            background-color: var(--sofe-secondary) !important;
+        }
+
+        #sidebar-wrapper .sidebar-heading {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #sidebar-wrapper .list-group {
+            width: 100%;
+        }
+
+        #sidebar-wrapper .list-group-item {
+            border: none;
+            padding: 1rem 1.25rem;
+            color: rgba(255, 255, 255, 0.7);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        #sidebar-wrapper .list-group-item:hover {
+            background-color: var(--sofe-primary);
+            color: white;
+        }
+
+        #sidebar-wrapper .list-group-item.active {
+            background-color: var(--sofe-primary);
+            color: white;
+            font-weight: bold;
+        }
+
+        #page-content-wrapper {
+            min-width: 100vw;
+            transition: margin .25s ease-out;
+            background-color: var(--sofe-light-bg);
+        }
+
+        #wrapper.toggled #sidebar-wrapper {
+            margin-left: 0;
+        }
+
+        #wrapper.toggled #page-content-wrapper {
+            margin-left: 15rem;
+        }
+
+        @media (min-width: 768px) {
+            #sidebar-wrapper {
+                margin-left: 0;
+            }
+
+            #page-content-wrapper {
+                min-width: 0;
+                width: 100%;
+            }
+
+            #wrapper.toggled #sidebar-wrapper {
+                margin-left: -15rem;
+            }
+
+            #wrapper.toggled #page-content-wrapper {
+                margin-left: 0;
+            }
+        }
+
+        /* Custom styles for cards and forms */
+        .card {
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            border-bottom: 1px solid var(--sofe-border);
+            font-weight: 600;
+        }
+
+        .navbar {
+            padding: 1rem 1.5rem;
+            background-color: white !important;
+            border-bottom: 1px solid var(--sofe-border);
+        }
+
+        .navbar .nav-link {
+            color: var(--sofe-text);
+        }
+
+        .navbar .nav-link:hover {
+            color: var(--sofe-primary);
+        }
+
+        .navbar .dropdown-menu {
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--sofe-primary);
+            border-color: var(--sofe-primary);
+        }
+        .btn-primary:hover {
+            background-color: #2880bf; /* Darker shade of --sofe-primary */
+            border-color: #2880bf;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .badge {
+            font-size: 0.7em;
+            vertical-align: super;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar (Left Navbar) -->
+        <div class="bg-dark border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading text-white text-center py-4">
+                <img src="https://via.placeholder.com/30x30/FFFFFF/000000?text=Logo" alt="SOFE GROUP Logo" height="30" class="me-2 rounded-circle">
+                SOFE GROUP Admin
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white active">
+                    <i class="fas fa-users me-2"></i>Users
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
+                    <i class="fas fa-box me-2"></i>Products
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
+                    <i class="fas fa-shopping-cart me-2"></i>Orders
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
+                    <i class="fas fa-file-alt me-2"></i>Reports
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
+                    <i class="fas fa-cogs me-2"></i>Settings
+                </a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content Wrapper -->
+        <div id="page-content-wrapper">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <button class="btn btn-primary" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                        <li class="nav-item me-3">
+                            <a class="nav-link" href="#"><i class="fas fa-search"></i></a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link" href="#"><i class="fas fa-bell"></i><span class="badge bg-danger">3</span></a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link" href="#"><i class="fas fa-envelope"></i><span class="badge bg-info">2</span></a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="https://via.placeholder.com/30x30/CCCCCC/000000?text=AD" alt="Admin Avatar" class="rounded-circle me-1" width="30" height="30">
+                                Admin Name
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Profile</a>
+                                <a class="dropdown-item" href="#">Settings</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content Area: Edit User Form -->
+            <div class="container-fluid p-4">
+                <h1 class="mt-4">Edit User Details</h1>
+                <p class="lead">Update the information for user ID: {% if user %}{{ user.id }}{% else %}N/A{% endif %}</p>
+
+                <div class="card border-0 shadow mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">User Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Flash messages display area (Flask example) -->
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <!-- The Form for editing user details -->
+                        <form method="POST" action="{{ url_for('edit_user', user_id=user.id) }}">
+                            <!-- Hidden input for user ID, crucial for identifying which user to update -->
+                            <input type="hidden" name="user_id" value="{% if user %}{{ user.id }}{% endif %}">
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" 
+                                       value="{% if user %}{{ user.name }}{% endif %}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="{% if user %}{{ user.email }}{% endif %}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="referral_code" class="form-label">Referral Code</label>
+                                <input type="text" class="form-control" id="referral_code" name="referral_code" 
+                                       value="{% if user %}{{ user.referral_code }}{% endif %}" required>
+                            </div>
+
+                            <!-- Optional: Password Reset/Change Section -->
+                            <div class="mb-3">
+                                <label for="password" class="form-label">New Password (Leave blank to keep current)</label>
+                                <input type="password" class="form-control" id="password" name="password">
+                                <small class="form-text text-muted">Enter a new password only if you want to change it. Passwords should be hashed securely on the backend.</small>
+                            </div>
+                            
+                            <!-- Save Changes Button -->
+                            <button type="submit" class="btn btn-primary mt-3">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            
+                            <!-- Back to Users Button -->
+                            <a href="{{ url_for('all_users') }}" class="btn btn-secondary mt-3 ms-2">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Users
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /#page-content-wrapper -->
+        </div>
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript for sidebar toggle -->
+    <script>
+        document.getElementById("sidebarToggle").addEventListener("click", () => {
+            document.getElementById("wrapper").classList.toggle("toggled");
+        });
+    </script>
+</body>
+</html>

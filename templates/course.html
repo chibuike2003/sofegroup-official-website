@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofe Group - Course Enrollment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light blue-gray background */
+        }
+        /* Custom colors for better control if needed, otherwise Tailwind defaults are fine */
+        .bg-sofe-blue { background-color: #1e3a8a; } /* Darker blue */
+        .text-sofe-blue { color: #1e3a8a; }
+        .bg-sofe-orange { background-color: #f97316; } /* Vibrant orange */
+        .text-sofe-orange { color: #f97316; }
+        .border-sofe-blue { border-color: #1e3a8a; }
+        .hover\:bg-sofe-orange-dark:hover { background-color: #ea580c; } /* Darker orange on hover */
+        .hover\:bg-sofe-blue-dark:hover { background-color: #172554; } /* Darker blue on hover */
+
+        /* Styles for sidebar toggle on smaller screens */
+        @media (max-width: 1023px) {
+            .sidebar-hidden {
+                transform: translateX(-100%);
+                position: absolute;
+                z-index: 40; /* Ensure it's above content but below header */
+            }
+            .sidebar-visible {
+                transform: translateX(0);
+            }
+        }
+
+        /* Active sidebar link style */
+        .sidebar-nav-link.active {
+            background-color: #f97316; /* Orange background for active link */
+            color: white;
+            font-weight: 600; /* Semi-bold */
+        }
+
+        /* Course detail view hidden by default */
+        /* Updated to initially hide all dynamic content sections */
+        #course-detail-view, #my-enrolled-courses, #course-categories, #wishlist {
+            display: none;
+        }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* High z-index to appear on top */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 1rem; /* rounded-xl */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
+            width: 90%;
+            max-width: 500px;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            position: relative;
+        }
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            color: #ef4444; /* red-500 */
+            cursor: pointer;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="text-gray-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md py-4 px-6 md:px-12 fixed w-full z-50">
+        <nav class="container mx-auto flex justify-between items-center flex-wrap">
+            <div class="flex items-center flex-shrink-0 text-sofe-blue mr-6">
+                <span class="font-extrabold text-3xl tracking-tight">Sofe Group</span>
+            </div>
+            <div class="block lg:hidden">
+                <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-sofe-blue border-sofe-blue hover:text-sofe-orange hover:border-sofe-orange">
+                    <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                </button>
+            </div>
+            <div id="nav-content" class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-4 lg:mt-0" style="text-align: center;">
+                <div class="text-lg lg:flex-grow">
+                    <a href="{{ url_for('courses', _anchor='all-courses') }}" class="block mt-4 lg:inline-block lg:mt-0 text-sofe-blue font-bold mr-6 transition duration-300 ease-in-out">Courses</a>
+                    <a href="index.html#home" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Home</a>
+                    <a href="index.html#services" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Services</a>
+                    <a href="consult.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Consult</a>
+                    <a href="events.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Events</a>
+                    <a href="index.html#about-us" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">About Us</a>
+                    <a href="dashboard.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Dashboard</a>
+                    <a href="help.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Help</a>
+                </div>
+                <div class="mt-4 lg:mt-0">
+                    <a href="{{ url_for('logout') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out shadow-lg">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="flex flex-1 pt-20">
+        <aside id="sidebar" class="bg-sofe-blue text-white w-64 p-6 space-y-6 flex-shrink-0 lg:sticky top-20 h-[calc(100vh-80px)] overflow-y-auto transition-transform duration-300 ease-in-out sidebar-hidden lg:sidebar-visible">
+            <h3 class="text-2xl font-bold mb-4">Course Menu</h3>
+            <nav class="space-y-3">
+                <a href="#all-courses" class="sidebar-nav-link flex items-center text-lg py-2 px-4 rounded-lg hover:bg-sofe-orange transition duration-300 ease-in-out active" data-target-section="all-courses">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    All Courses
+                </a>
+                <a href="#my-enrolled-courses" class="sidebar-nav-link flex items-center text-lg py-2 px-4 rounded-lg hover:bg-sofe-orange transition duration-300 ease-in-out" data-target-section="my-enrolled-courses">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M17 12h.01"></path></svg>
+                    My Enrolled Courses
+                </a>
+                <a href="#course-categories" class="sidebar-nav-link flex items-center text-lg py-2 px-4 rounded-lg hover:bg-sofe-orange transition duration-300 ease-in-out" data-target-section="course-categories">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    Categories
+                </a>
+                <a href="#wishlist" class="sidebar-nav-link flex items-center text-lg py-2 px-4 rounded-lg hover:bg-sofe-orange transition duration-300 ease-in-out" data-target-section="wishlist">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    Wishlist
+                </a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 lg:p-10">
+            <button id="sidebar-toggle" class="lg:hidden fixed bottom-6 right-6 bg-sofe-orange text-white p-4 rounded-full shadow-lg z-40">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+
+            <h1 class="text-4xl md:text-5xl font-extrabold text-sofe-blue mb-8">Explore Our Courses</h1>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} bg-{{ category }}-100 border-l-4 border-{{ category }}-500 text-{{ category }}-700 p-4 rounded-lg shadow-md mb-6" role="alert">
+                            {{ message }}
+                            <button type="button" class="close-alert float-right font-bold text-lg" onclick="this.parentElement.style.display='none';">&times;</button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+
+            <section id="all-courses" class="mb-12">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+                    <input type="text" placeholder="Search courses..." class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange focus:border-transparent text-lg max-w-md">
+                    <select class="p-3 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange focus:border-transparent">
+                        <option>All Categories</option>
+                        <option>Web Development</option>
+                        <option>App Development</option>
+                        <option>Blockchain</option>
+                        <option>Product Design</option>
+                        <option>Cyber Security</option>
+                        <option>Data Analysis</option>
+                        <option>Trading</option>
+                        <option>Marketing</option>
+                        <option>Content Creation</option>
+                        <option>Design</option>
+                        <option>Community Management</option>
+                        <option>Project Management</option>
+                        <option>Video Editing</option>
+                    </select>
+                </div>
+
+                <div id="course-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+            </section>
+
+            <section id="course-detail-view" class="mb-12 bg-white rounded-xl shadow-md p-6 lg:p-10">
+                <button id="back-to-courses" class="text-sofe-blue hover:text-sofe-orange flex items-center mb-6 font-semibold transition duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Back to All Courses
+                </button>
+
+                <div class="flex flex-col lg:flex-row lg:space-x-8">
+                    <div class="lg:w-2/3">
+                        <img id="detail-course-image" src="https://placehold.co/800x500/1e3a8a/ffffff?text=Detailed+Course+Image" alt="Detailed Course Image" class="w-full rounded-lg mb-6">
+                        <h2 id="detail-course-title" class="text-3xl font-bold text-sofe-blue mb-4"></h2>
+                        <p id="detail-course-long-description" class="text-gray-700 leading-relaxed mb-6"></p>
+
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">What you'll learn:</h3>
+                        <ul id="detail-course-learning-points" class="list-disc list-inside text-gray-700 mb-6 space-y-2">
+                            </ul>
+
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Course Curriculum:</h3>
+                        <div id="detail-course-curriculum" class="space-y-3">
+                            </div>
+                    </div>
+                    <div class="lg:w-1/3 mt-8 lg:mt-0 bg-gray-50 p-6 rounded-lg shadow-inner">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sofe-orange font-bold text-4xl" id="detail-course-price"></span>
+                        </div>
+                        <p class="text-gray-600 mb-2">Instructor: <span id="detail-course-instructor" class="font-semibold"></span></p>
+                        <p class="text-gray-600 mb-2">Duration: <span id="detail-course-duration" class="font-semibold"></span></p>
+                        <p class="text-gray-600 mb-6">Level: <span id="detail-course-level" class="font-semibold"></span></p>
+
+                        <button id="enroll-now-btn" class="w-full bg-sofe-orange text-white px-8 py-4 rounded-full font-bold text-xl hover:bg-sofe-orange-dark transition duration-300 ease-in-out shadow-lg">
+                            Enroll Now
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="my-enrolled-courses" class="mb-12 bg-white rounded-xl shadow-md p-6 lg:p-10">
+                <h2 class="text-3xl font-bold text-sofe-blue mb-6">My Enrolled Courses</h2>
+                <div id="enrolled-courses-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% if enrolled_courses %}
+                        {% for enrollment in enrolled_courses %}
+                            <div class="bg-gray-50 p-4 rounded-lg shadow-sm border border-sofe-blue">
+                                <h4 class="font-semibold text-lg text-gray-800 mb-2">{{ enrollment.course_name }}</h4>
+                                <p class="text-gray-600 text-sm mb-1">Status: <span class="font-bold text-sofe-orange">{{ enrollment.status.capitalize() }}</span></p>
+                                <p class="text-gray-600 text-sm">Enrolled on: {{ enrollment.enrollment_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                                {% if enrollment.receipt_filename %}
+                                    <p class="text-sm text-gray-500 mt-2">Receipt: <a href="{{ url_for('static', filename='receipts/' + enrollment.receipt_filename) }}" target="_blank" class="text-sofe-blue hover:underline">View Receipt</a></p>
+                                {% endif %}
+                                {# Add more details as needed #}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-lg text-gray-800 mb-2">No courses enrolled yet.</h4>
+                            <p class="text-gray-600 text-sm">Browse our <a href="#all-courses" class="text-sofe-orange hover:underline">All Courses</a> section to find your next learning journey!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section id="course-categories" class="mb-12 bg-white rounded-xl shadow-md p-6 lg:p-10">
+                <h2 class="text-3xl font-bold text-sofe-blue mb-6">Course Categories</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Web Development</h4>
+                        <p class="text-sm">HTML, CSS, JavaScript, Rust, Node.js</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">App Development</h4>
+                        <p class="text-sm">Mobile, Desktop, Cross-Platform</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Blockchain</h4>
+                        <p class="text-sm">Solidity, Smart Contracts, DApps</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Product Design</h4>
+                        <p class="text-sm">UI/UX, Prototyping, User Research</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Cyber Security</h4>
+                        <p class="text-sm">Network Security, Ethical Hacking</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Data Analysis</h4>
+                        <p class="text-sm">Statistics, Data Visualization</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Trading</h4>
+                        <p class="text-sm">Crypto, Forex, Market Analysis</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Digital Marketing</h4>
+                        <p class="text-sm">SEO, SEM, Social Media</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Content Creation</h4>
+                        <p class="text-sm">Scriptwriting, Videography, Filmmaking</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Graphics Design</h4>
+                        <p class="text-sm">Photoshop, Illustrator, Branding</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Community Management</h4>
+                        <p class="text-sm">Engagement, Moderation, Strategy</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Blockchain Project Management</h4>
+                        <p class="text-sm">Agile, Scrum, Blockchain Projects</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center hover:bg-sofe-blue hover:text-white transition duration-300 ease-in-out cursor-pointer">
+                        <h4 class="font-semibold text-lg mb-2">Video Editing</h4>
+                        <p class="text-sm">Premiere Pro, DaVinci Resolve</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="wishlist" class="mb-12 bg-white rounded-xl shadow-md p-6 lg:p-10">
+                <h2 class="text-3xl font-bold text-sofe-blue mb-6">My Wishlist</h2>
+                <div id="wishlist-items" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                        <h4 class="font-semibold text-lg text-gray-800 mb-2">Your wishlist is empty.</h4>
+                        <p class="text-gray-600 text-sm">Click "View Details" on any course and look for an "Add to Wishlist" button (feature to be added).</p>
+                    </div>
+                </div>
+            </section>
+
+            </main>
+    </div>
+
+    <footer class="bg-sofe-blue text-white py-10 px-6 mt-auto">
+        <div class="container mx-auto text-center">
+            <p class="text-lg mb-4">&copy; 2023 Sofe Group. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Privacy Policy</a>
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Terms of Service</a>
+                <a href="contact.html" class="hover:text-sofe-orange transition duration-300 ease-in-out">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="payment-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close-btn" id="close-payment-modal">&times;</span>
+            <h2 class="text-2xl font-bold text-sofe-blue mb-6">Complete Your Enrollment</h2>
+            <form id="payment-form" action="{{ url_for('enroll_course') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <div>
+                    <label for="fullName" class="block text-gray-700 font-semibold mb-2">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange" value="{{ user_full_name }}" required readonly>
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-700 font-semibold mb-2">Email Address</label>
+                    <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange" value="{{ user_email }}" required readonly>
+                </div>
+                <div>
+                    <label for="modalCourseName" class="block text-gray-700 font-semibold mb-2">Course Name</label>
+                    <input type="text" id="modalCourseName" name="courseName" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed" readonly>
+                </div>
+                <div>
+                    <label for="modalAmountPaid" class="block text-gray-700 font-semibold mb-2">Amount to Pay</label>
+                    <input type="number" id="modalAmountPaid" name="amountPaid" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange" placeholder="Enter amount" required>
+                </div>
+                <div>
+                    <label for="transactionId" class="block text-gray-700 font-semibold mb-2">Transaction ID (Optional)</label>
+                    <input type="text" id="transactionId" name="transactionId" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange">
+                </div>
+                <div>
+                    <label for="paymentReceipt" class="block text-gray-700 font-semibold mb-2">Upload Payment Receipt</label>
+                    <input type="file" id="paymentReceipt" name="paymentReceipt" accept="image/*,.pdf" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange" required>
+                    <p class="text-sm text-gray-500 mt-1">Accepted formats: images (JPG, PNG) or PDF.</p>
+                </div>
+                <button type="submit" class="w-full bg-sofe-blue text-white px-8 py-4 rounded-full font-bold text-xl hover:bg-sofe-blue-dark transition duration-300 ease-in-out shadow-lg">
+                    Submit Enrollment & Payment
+                </button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // Data for courses (simulating a database)
+        // Keep this JavaScript array as it's used for client-side display logic
+        const coursesData = [
+            {
+                id: 1,
+                title: "Web Development Basics (HTML, CSS & JAVA)",
+                shortDescription: "Master the foundational technologies of the web: HTML for structure, CSS for styling, and JavaScript for interactivity.",
+                longDescription: "This introductory course is perfect for beginners looking to step into web development. You'll learn to build well-structured and visually appealing websites using HTML and CSS, and add dynamic features with JavaScript. By the end, you'll have a solid understanding of front-end web development principles.",
+                image: "https://placehold.co/800x500/1e3a8a/ffffff?text=Web+Dev+Basics",
+                price: 50000.00, // Store price as number for easier manipulation
+                displayPrice: "#50,000.00", // Display price with currency symbol
+                duration: "80 hours",
+                instructor: "Alice Johnson",
+                level: "Beginner",
+                learningPoints: [
+                    "Understand HTML structure and semantic elements.",
+                    "Style web pages with CSS selectors, properties, and layouts.",
+                    "Add interactivity and dynamic content using JavaScript.",
+                    "Learn responsive design principles for various devices.",
+                    "Build a foundational portfolio of web projects."
+                ],
+                curriculum: [
+                    "Module 1: Introduction to Web Development & HTML Fundamentals",
+                    "Module 2: Styling with CSS (Selectors, Box Model, Flexbox)",
+                    "Module 3: Introduction to JavaScript (Variables, Data Types, Functions)",
+                    "Module 4: DOM Manipulation and Event Handling",
+                    "Module 5: Responsive Web Design & Basic Project"
+                ],
+                category: "Web Development"
+            },
+            {
+                id: 2,
+                title: "Advance Frontend (Rust and NodeJS)",
+                shortDescription: "Dive into advanced frontend development using Rust for performance and NodeJS for tooling and build processes.",
+                longDescription: "This course explores modern frontend development paradigms, leveraging Rust for high-performance WebAssembly modules and NodeJS for powerful build tools, package management, and server-side rendering (SSR) if applicable. Ideal for developers looking to push the boundaries of web application performance and complexity.",
+                image: "https://placehold.co/800x500/f97316/ffffff?text=Advanced+Frontend",
+                price: 50000.00,
+                displayPrice: "#50,000.00",
+                duration: "100 hours",
+                instructor: "Bob Williams",
+                level: "Advanced",
+                learningPoints: [
+                    "Develop performant frontend components with Rust and WebAssembly.",
+                    "Utilize NodeJS for robust build systems and development workflows.",
+                    "Explore modern JavaScript frameworks in conjunction with Rust.",
+                    "Implement advanced state management and data fetching patterns.",
+                    "Optimize web application performance and user experience."
+                ],
+                curriculum: [
+                    "Module 1: Introduction to Rust for WebAssembly",
+                    "Module 2: Building Web Components with Rust and Frontend Frameworks",
+                    "Module 3: NodeJS for Build Tools (Webpack, Rollup)",
+                    "Module 4: Advanced JavaScript & Asynchronous Programming",
+                    "Module 5: Performance Optimization & Deployment"
+                ],
+                category: "Web Development"
+            },
+            {
+                id: 3,
+                title: "Advance Backend",
+                shortDescription: "Master robust backend development, including microservices, scalable APIs, and secure architectures.",
+                longDescription: "This advanced course covers building highly scalable and secure backend systems. You will delve into microservices architecture, API design best practices, database optimization, and deployment strategies using modern backend frameworks and cloud services.",
+                image: "https://placehold.co/800x500/1e3a8a/ffffff?text=Advanced+Backend",
+                price: 50000.00,
+                displayPrice: "#50,000.00",
+                duration: "120 hours",
+                instructor: "Charlie Brown",
+                level: "Advanced",
+                learningPoints: [
+                    "Design and implement scalable RESTful and GraphQL APIs.",
+                    "Understand and apply microservices architecture patterns.",
+                    "Optimize database performance and design complex schemas.",
+                    "Implement robust authentication and authorization mechanisms.",
+                    "Deploy and manage backend services on cloud platforms."
+                ],
+                curriculum: [
+                    "Module 1: Advanced API Design & Development",
+                    "Module 2: Microservices and Distributed Systems",
+                    "Module 3: Database Optimization & NoSQL Databases",
+                    "Module 4: Security and Authentication in Backend",
+                    "Module 5: Cloud Deployment & Monitoring"
+                ],
+                category: "Web Development"
+            },
+            {
+                id: 4,
+                title: "App Development",
+                shortDescription: "Learn to build cross-platform mobile applications for iOS and Android.",
+                longDescription: "This comprehensive course teaches you how to design, develop, and deploy mobile applications using modern frameworks like React Native or Flutter. You'll gain hands-on experience in UI/UX design for mobile, API integration, state management, and debugging. By the end of the course, you'll be able to build functional and visually appealing mobile apps for both iOS and Android platforms.",
+                image: "https://placehold.co/800x500/f97316/ffffff?text=App+Development",
+                price: 75000.00,
+                displayPrice: "#75,000.00",
+                duration: "150 hours",
+                instructor: "David Lee",
+                level: "Intermediate",
+                learningPoints: [
+                    "Develop cross-platform mobile apps with React Native or Flutter.",
+                    "Design intuitive and responsive mobile user interfaces.",
+                    "Integrate APIs and manage application state.",
+                    "Implement push notifications and offline capabilities.",
+                    "Prepare and deploy apps to Google Play Store and Apple App Store."
+                ],
+                curriculum: [
+                    "Module 1: Introduction to Mobile App Development & Frameworks",
+                    "Module 2: UI/UX Design for Mobile Applications",
+                    "Module 3: State Management and Data Persistence",
+                    "Module 4: API Integration and Backend Communication",
+                    "Module 5: Testing, Debugging, and Deployment"
+                ],
+                category: "App Development"
+            },
+            {
+                id: 5,
+                title: "Blockchain Fundamentals",
+                shortDescription: "Understand the core concepts of blockchain technology and its applications.",
+                longDescription: "This course provides a solid foundation in blockchain technology, covering its underlying principles, consensus mechanisms, and various use cases beyond cryptocurrencies. You'll learn about different types of blockchains, smart contracts, and the potential impact of this disruptive technology on various industries.",
+                image: "https://placehold.co/800x500/1e3a8a/ffffff?text=Blockchain+Fundamentals",
+                price: 60000.00,
+                displayPrice: "#60,000.00",
+                duration: "60 hours",
+                instructor: "Eve Green",
+                level: "Beginner",
+                learningPoints: [
+                    "Grasp the fundamental concepts of distributed ledger technology.",
+                    "Understand how cryptocurrencies like Bitcoin and Ethereum work.",
+                    "Explore smart contracts and their applications on blockchain.",
+                    "Identify various blockchain platforms and their distinctions.",
+                    "Discuss the real-world applications and challenges of blockchain."
+                ],
+                curriculum: [
+                    "Module 1: Introduction to Blockchain & Cryptography",
+                    "Module 2: Bitcoin and Decentralized Networks",
+                    "Module 3: Ethereum and Smart Contracts",
+                    "Module 4: Blockchain Platforms and Use Cases",
+                    "Module 5: Future of Blockchain & Industry Impact"
+                ],
+                category: "Blockchain"
+            },
+            {
+                id: 6,
+                title: "Solidity for Smart Contracts",
+                shortDescription: "Learn to write, deploy, and test smart contracts on the Ethereum blockchain using Solidity.",
+                longDescription: "This hands-on course is designed for developers who want to build decentralized applications (DApps) on the Ethereum platform. You'll gain practical skills in writing secure and efficient smart contracts using Solidity, deploying them to the Ethereum network, and interacting with them using web3.js.",
+                image: "https://placehold.co/800x500/f97316/ffffff?text=Solidity+Smart+Contracts",
+                price: 80000.00,
+                displayPrice: "#80,000.00",
+                duration: "90 hours",
+                instructor: "Frank White",
+                level: "Intermediate",
+                learningPoints: [
+                    "Master Solidity syntax and best practices for smart contract development.",
+                    "Understand the Ethereum Virtual Machine (EVM) and gas mechanics.",
+                    "Learn to deploy and interact with smart contracts.",
+                    "Implement common smart contract design patterns and security considerations.",
+                    "Develop and test basic decentralized applications (DApps)."
+                ],
+                curriculum: [
+                    "Module 1: Introduction to Solidity & EVM",
+                    "Module 2: Smart Contract Basics & Data Types",
+                    "Module 3: Functions, Events, and Modifiers",
+                    "Module 4: Interacting with Smart Contracts (Web3.js)",
+                    "Module 5: Security Best Practices & DApp Development"
+                ],
+                category: "Blockchain"
+            },
+            {
+                id: 7,
+                title: "Product Design Essentials",
+                shortDescription: "Learn the fundamentals of product design, from user research to prototyping.",
+                longDescription: "This course covers the essential principles and practices of product design. You'll learn how to conduct user research, create user flows, wireframes, and prototypes, and effectively communicate your design decisions. It's an ideal course for aspiring UX/UI designers and product managers.",
+                image: "https://placehold.co/800x500/1e3a8a/ffffff?text=Product+Design",
+                price: 45000.00,
+                displayPrice: "#45,000.00",
+                duration: "70 hours",
+                instructor: "Grace Taylor",
+                level: "Beginner",
+                learningPoints: [
+                    "Understand the product design lifecycle.",
+                    "Conduct effective user research and analysis.",
+                    "Create wireframes, mockups, and interactive prototypes.",
+                    "Apply user-centered design principles.",
+                    "Communicate design ideas and rationale effectively."
+                ],
+                curriculum: [
+                    "Module 1: Introduction to Product Design & UX Principles",
+                    "Module 2: User Research & Persona Development",
+                    "Module 3: Information Architecture & User Flows",
+                    "Module 4: Wireframing & Prototyping (Figma/Sketch)",
+                    "Module 5: Usability Testing & Design Handoff"
+                ],
+                category: "Product Design"
+            }
+        ];
+    
+        // Sidebar toggle functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const navToggle = document.getElementById('nav-toggle');
+        const navContent = document.getElementById('nav-content');
+    
+        // Function to toggle sidebar visibility
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('sidebar-hidden');
+            sidebar.classList.toggle('sidebar-visible');
+        };
+    
+        // Event listener for the main sidebar toggle button (fixed on mobile)
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', toggleSidebar);
+        }
+    
+        // Event listener for the header navigation toggle (for smaller screens)
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navContent.classList.toggle('hidden');
+            });
+        }
+    
+        // Function to render course cards
+        const renderCourseCards = (coursesToRender) => {
+            const courseListDiv = document.getElementById('course-list');
+            courseListDiv.innerHTML = ''; // Clear previous courses
+            coursesToRender.forEach(course => {
+                const courseCard = `
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out overflow-hidden transform hover:-translate-y-1">
+                        <img src="${course.image}" alt="${course.title}" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-sofe-blue mb-2">${course.title}</h3>
+                            <p class="text-gray-600 text-sm mb-4">${course.shortDescription}</p>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sofe-orange font-bold text-2xl">${course.displayPrice}</span>
+                                <span class="text-gray-500 text-sm">${course.duration}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <button class="view-details-btn bg-sofe-blue text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-sofe-blue-dark transition duration-300 ease-in-out" data-course-id="${course.id}">
+                                    View Details
+                                </button>
+                                <span class="text-gray-500 text-sm">${course.level}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                courseListDiv.insertAdjacentHTML('beforeend', courseCard);
+            });
+            attachViewDetailsListeners(); // Re-attach listeners after rendering
+        };
+    
+        // Function to display course details
+        const showCourseDetail = (courseId) => {
+            const course = coursesData.find(c => c.id === courseId);
+            if (!course) return;
+    
+            document.getElementById('detail-course-image').src = course.image;
+            document.getElementById('detail-course-title').textContent = course.title;
+            document.getElementById('detail-course-long-description').textContent = course.longDescription;
+            document.getElementById('detail-course-price').textContent = course.displayPrice;
+            document.getElementById('detail-course-instructor').textContent = course.instructor;
+            document.getElementById('detail-course-duration').textContent = course.duration;
+            document.getElementById('detail-course-level').textContent = course.level;
+    
+            const learningPointsList = document.getElementById('detail-course-learning-points');
+            learningPointsList.innerHTML = '';
+            course.learningPoints.forEach(point => {
+                const li = document.createElement('li');
+                li.textContent = point;
+                learningPointsList.appendChild(li);
+            });
+    
+            const curriculumDiv = document.getElementById('detail-course-curriculum');
+            curriculumDiv.innerHTML = '';
+            course.curriculum.forEach(item => {
+                const p = document.createElement('p');
+                p.className = 'text-gray-700';
+                p.textContent = item;
+                curriculumDiv.appendChild(p);
+            });
+    
+            // Set data for the enrollment modal
+            document.getElementById('enroll-now-btn').setAttribute('data-course-id', course.id);
+            document.getElementById('modalCourseName').value = course.title;
+            document.getElementById('modalAmountPaid').value = course.displayPrice; // Display price in modal
+    
+            document.getElementById('all-courses').style.display = 'none';
+            document.getElementById('my-enrolled-courses').style.display = 'none';
+            document.getElementById('course-categories').style.display = 'none';
+            document.getElementById('wishlist').style.display = 'none';
+            document.getElementById('course-detail-view').style.display = 'block';
+    
+            // Remove active class from all sidebar links
+            document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+        };
+    
+        // Function to attach event listeners to "View Details" buttons
+        const attachViewDetailsListeners = () => {
+            document.querySelectorAll('.view-details-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const courseId = parseInt(event.target.dataset.courseId);
+                    showCourseDetail(courseId);
+                });
+            });
+        };
+    
+        // Event listener for "Back to All Courses" button
+        document.getElementById('back-to-courses').addEventListener('click', () => {
+            document.getElementById('course-detail-view').style.display = 'none';
+            document.getElementById('my-enrolled-courses').style.display = 'none';
+            document.getElementById('course-categories').style.display = 'none';
+            document.getElementById('wishlist').style.display = 'none';
+            document.getElementById('all-courses').style.display = 'block';
+    
+            // Set "All Courses" sidebar link as active
+            document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector('.sidebar-nav-link[data-target-section="all-courses"]').classList.add('active');
+        });
+    
+        // Function to handle sidebar navigation clicks
+        document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default anchor link behavior
+                const targetSectionId = this.dataset.targetSection;
+    
+                // Hide all main content sections
+                document.getElementById('all-courses').style.display = 'none';
+                document.getElementById('course-detail-view').style.display = 'none';
+                document.getElementById('my-enrolled-courses').style.display = 'none';
+                document.getElementById('course-categories').style.display = 'none';
+                document.getElementById('wishlist').style.display = 'none';
+    
+                // Show the target section
+                document.getElementById(targetSectionId).style.display = 'block';
+    
+                // Update active class for sidebar links
+                document.querySelectorAll('.sidebar-nav-link').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                this.classList.add('active');
+    
+                // Hide sidebar on mobile after selection
+                if (window.innerWidth < 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+    
+        // Initial render of all courses when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCourseCards(coursesData);
+    
+            // Handle URL hash for direct access to sections
+            const hash = window.location.hash;
+            if (hash) {
+                const targetSectionId = hash.substring(1); // Remove '#'
+                const targetLink = document.querySelector(`.sidebar-nav-link[data-target-section="${targetSectionId}"]`);
+                if (targetLink) {
+                    targetLink.click(); // Simulate a click on the corresponding sidebar link
+                } else if (targetSectionId === 'all-courses') {
+                       // Ensure all-courses is displayed if no specific section is matched but hash is all-courses
+                    document.getElementById('all-courses').style.display = 'block';
+                    document.querySelector('.sidebar-nav-link[data-target-section="all-courses"]').classList.add('active');
+                }
+            } else {
+                // Default to showing all courses if no hash
+                document.getElementById('all-courses').style.display = 'block';
+                document.querySelector('.sidebar-nav-link[data-target-section="all-courses"]').classList.add('active');
+            }
+        });
+    
+    
+        // Payment Modal functionality
+        const paymentModal = document.getElementById('payment-modal');
+        const enrollNowBtn = document.getElementById('enroll-now-btn');
+        const closeModalBtn = document.getElementById('close-payment-modal');
+        const modalCourseName = document.getElementById('modalCourseName');
+        const modalAmountPaid = document.getElementById('modalAmountPaid');
+    
+        if (enrollNowBtn) {
+            enrollNowBtn.addEventListener('click', () => {
+                const courseId = parseInt(enrollNowBtn.dataset.courseId);
+                const selectedCourse = coursesData.find(c => c.id === courseId);
+                if (selectedCourse) {
+                    modalCourseName.value = selectedCourse.title;
+                    document.getElementById('modalAmountPaid').value = selectedCourse.displayPrice;
+                    paymentModal.classList.add('show');
+                }
+            });
+        }
+    
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                paymentModal.classList.remove('show');
+            });
+        }
+    
+        // Close modal when clicking outside
+        if (paymentModal) {
+            paymentModal.addEventListener('click', (e) => {
+                if (e.target === paymentModal) {
+                    paymentModal.classList.remove('show');
+                }
+            });
+        }
+    
+    </script>
+</body>
+</html>

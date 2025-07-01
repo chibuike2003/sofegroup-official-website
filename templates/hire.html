@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofe Group - Building Future Africa Through Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light blue-gray background */
+        }
+        /* Custom colors for better control if needed, otherwise Tailwind defaults are fine */
+        .bg-sofe-blue { background-color: #1e3a8a; } /* Darker blue */
+        .text-sofe-blue { color: #1e3a8a; }
+        .bg-sofe-orange { background-color: #f97316; } /* Vibrant orange */
+        .text-sofe-orange { color: #f97316; }
+        .border-sofe-blue { border-color: #1e3a8a; }
+        .hover\:bg-sofe-orange-dark:hover { background-color: #ea580c; } /* Darker orange on hover */
+        .hover\:bg-sofe-blue-dark:hover { background-color: #172554; } /* Darker blue on hover */
+
+        /* Hero Section Specific Styles */
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Professional background image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .hero-bg::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(30, 58, 138, 0.8), rgba(249, 115, 22, 0.6)); /* Dark blue to orange gradient overlay */
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Card Styles for Why Choose Us section */
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            padding: 2.5rem; /* p-10 */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Input field styling */
+        .input-field {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #4a5568; /* gray-700 */
+            background-color: #f0f4f8; /* A very light blue-gray for inputs */
+            background-clip: padding-box;
+            border: 1px solid #cbd5e0; /* border-gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .input-field:focus {
+            border-color: #f97316; /* sofe-orange on focus */
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.3); /* Ring on focus */
+            outline: none;
+        }
+
+        /* Flash message styling */
+        .flash-message {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .flash-message.success {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+            border: 1px solid #34d399; /* green-400 */
+        }
+        .flash-message.error {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+            border: 1px solid #f87171; /* red-400 */
+        }
+        .flash-message.info {
+            background-color: #e0f2fe; /* blue-100 */
+            color: #1e40af; /* blue-800 */
+            border: 1px solid #60a5fa; /* blue-400 */
+        }
+
+        /* Process section specific styles */
+        .process-step {
+            position: relative;
+            padding-bottom: 2rem; /* Space for the line */
+        }
+
+        .process-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            height: 50px; /* Length of the connecting line */
+            background-color: #cbd5e0; /* Gray line */
+            transform: translateX(-50%);
+        }
+
+        @media (min-width: 768px) {
+            .process-step:not(:last-child)::after {
+                content: '';
+                position: absolute;
+                bottom: initial;
+                top: 50%;
+                left: 100%; /* Position to the right */
+                width: 50px; /* Length of the connecting line */
+                height: 2px;
+                background-color: #cbd5e0;
+                transform: translateY(-50%);
+            }
+            .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div {
+                position: relative; /* Ensure positioning context for lines */
+            }
+        }
+         @media (min-width: 1024px) {
+            .process-step:not(:last-child)::after {
+                width: 70px; /* Longer line for larger screens */
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md py-4 px-6 md:px-12 fixed w-full z-50">
+        <nav class="container mx-auto flex justify-between items-center flex-wrap">
+            <div class="flex items-center flex-shrink-0 text-sofe-blue mr-6">
+                <span class="font-extrabold text-3xl tracking-tight">Sofe Group</span>
+            </div>
+            <div class="block lg:hidden">
+                <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-sofe-blue border-sofe-blue hover:text-sofe-orange hover:border-sofe-orange">
+                    <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                </button>
+            </div>
+            <div id="nav-content" class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-4 lg:mt-0">
+                <div class="text-lg lg:flex-grow" style="text-align: center;">
+                    <a href="#home" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Home</a>
+                    <a href="#services" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Services</a>
+                    <a href="consult.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Consult</a>
+                    <a href="event.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Events</a>
+                    <a href="#about-us" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">About Us</a>
+                </div>
+                <div>
+                    {% if session.get('user_id') %}
+                        <span class="inline-block text-lg px-6 py-3 leading-none rounded-full text-sofe-blue bg-gray-100 mt-4 lg:mt-0 shadow-lg mr-4">Welcome, {{ session.get('name', '').split(' ')[0] }}</span>
+                        <a href="{{ url_for('dashboard') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-blue hover:bg-sofe-blue-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Dashboard</a>
+                        <a href="{{ url_for('logout') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg ml-4">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('signup') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Login/Sign up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero-bg relative text-white flex items-center justify-center min-h-screen py-20 pt-32 lg:pt-0">
+        <div class="absolute inset-0 bg-black opacity-60"></div>
+        <div class="container mx-auto text-center relative z-10 px-6 hero-content">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 drop-shadow-2xl">
+                Partner with SOFE GROUP
+            </h1>
+            <p class="text-xl md:text-2xl lg:text-3xl font-medium mb-10 max-w-3xl mx-auto drop-shadow-lg">
+                Accelerate your vision with Africa's leading blockchain and tech innovators.
+            </p>
+            <a href="#contact-form" class="inline-block bg-sofe-orange hover:bg-sofe-orange-dark text-white font-bold py-4 px-10 rounded-full text-xl transition duration-300 ease-in-out shadow-xl transform hover:scale-105">
+                Start Your Project
+            </a>
+        </div>
+    </section>
+
+    <section id="why-us" class="py-20 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-sofe-blue mb-16">Why Choose Sofe Group?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="card flex flex-col items-center text-center transform hover:scale-105 transition duration-300 ease-in-out">
+                    <div class="text-sofe-orange text-5xl mb-6">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-4">Innovative Solutions</h3>
+                    <p class="text-gray-700 leading-relaxed">We leverage cutting-edge blockchain and emerging technologies to deliver future-proof solutions tailored to your unique challenges.</p>
+                </div>
+                <div class="card flex flex-col items-center text-center transform hover:scale-105 transition duration-300 ease-in-out">
+                    <div class="text-sofe-orange text-5xl mb-6">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-4">Expert Team</h3>
+                    <p class="text-gray-700 leading-relaxed">Our team comprises seasoned professionals with deep expertise in blockchain, media, and tech education, ensuring top-tier execution.</p>
+                </div>
+                <div class="card flex flex-col items-center text-center transform hover:scale-105 transition duration-300 ease-in-out">
+                    <div class="text-sofe-orange text-5xl mb-6">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-4">Partnership Approach</h3>
+                    <p class="text-gray-700 leading-relaxed">We work collaboratively with you, understanding your goals to build solutions that truly drive your success and growth.</p>
+                </div>
+                <div class="card flex flex-col items-center text-center transform hover:scale-105 transition duration-300 ease-in-out">
+                    <div class="text-sofe-orange text-5xl mb-6">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-4">Measurable Impact</h3>
+                    <p class="text-gray-700 leading-relaxed">Our focus is on delivering tangible results and measurable ROI, ensuring your investment with us yields significant returns.</p>
+                </div>
+                <div class="card flex flex-col items-center text-center transform hover:scale-105 transition duration-300 ease-in-out">
+                    <div class="text-sofe-orange text-5xl mb-6">
+                        <i class="fas fa-globe-africa"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-4">African Focus</h3>
+                    <p class="text-gray-700 leading-relaxed">Deep understanding of the African market and a commitment to fostering technological advancement across the continent.</p>
+                </div>
+                <div class="card flex flex-col items-center text-center transform hover:scale-105 transition duration-300 ease-in-out">
+                    <div class="text-sofe-orange text-5xl mb-6">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-4">Reliability & Trust</h3>
+                    <p class="text-gray-700 leading-relaxed">Built on a foundation of integrity and loyalty, we are a partner you can trust for long-term success.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="our-process" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-sofe-blue mb-16">Our Partnership Process</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 justify-items-center">
+                <div class="process-step flex flex-col items-center text-center">
+                    <div class="bg-sofe-orange text-white rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold mb-6 shadow-lg">1</div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-3">Discovery</h3>
+                    <p class="text-gray-700 leading-relaxed">We listen to understand your needs, challenges, and aspirations.</p>
+                </div>
+                <div class="process-step flex flex-col items-center text-center">
+                    <div class="bg-sofe-blue text-white rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold mb-6 shadow-lg">2</div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-3">Strategy</h3>
+                    <p class="text-gray-700 leading-relaxed">We craft a tailored strategy and solution roadmap for your project.</p>
+                </div>
+                <div class="process-step flex flex-col items-center text-center">
+                    <div class="bg-sofe-orange text-white rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold mb-6 shadow-lg">3</div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-3">Execution</h3>
+                    <p class="text-gray-700 leading-relaxed">Our expert team brings the strategy to life with precision and quality.</p>
+                </div>
+                <div class="process-step flex flex-col items-center text-center">
+                    <div class="bg-sofe-blue text-white rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold mb-6 shadow-lg">4</div>
+                    <h3 class="text-2xl font-bold text-sofe-blue mb-3">Growth</h3>
+                    <p class="text-gray-700 leading-relaxed">We ensure your solution evolves, supporting your long-term growth.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact-form" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-sofe-blue text-center mb-12">Ready to Transform Your Business?</h2>
+            <p class="text-xl text-gray-700 text-center mb-10 max-w-2xl mx-auto">
+                Tell us about your project or needs, and our team will get back to you shortly.
+            </p>
+            <div class="max-w-3xl mx-auto card p-8">
+                <form action="{{ url_for('hire') }}" method="POST" class="space-y-6">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="mb-4">
+                            {% for category, message in messages %}
+                                <div class="flash-message {{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% endwith %}
+                    <div>
+                        <label for="full_name" class="block text-lg font-medium text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Your Full Name" class="input-field" required>
+                    </div>
+                    <div>
+                        <label for="company_name" class="block text-lg font-medium text-gray-700 mb-2">Company Name (Optional)</label>
+                        <input type="text" id="company_name" name="company_name" placeholder="Your Company" class="input-field">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-lg font-medium text-gray-700 mb-2">Work Email</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" class="input-field" required>
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-lg font-medium text-gray-700 mb-2">Phone Number (Optional)</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567" class="input-field">
+                    </div>
+                    <div>
+                        <label for="service_interest" class="block text-lg font-medium text-gray-700 mb-2">I'm interested in...</label>
+                        <select id="service_interest" name="service_interest" class="input-field" required>
+                            <option value="">Select a service</option>
+                            <option value="blockchain_hub">Sofe Blockchain Hub</option>
+                            <option value="media">Sofe Media</option>
+                            <option value="academy">Sofe Academy (Corporate Training)</option>
+                            <option value="custom_solution">Custom Tech Solution</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="project_details" class="block text-lg font-medium text-gray-700 mb-2">Project Details / Message</label>
+                        <textarea id="project_details" name="project_details" rows="6" placeholder="Tell us more about your project or how we can help you." class="input-field resize-y" required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="inline-block bg-sofe-orange hover:bg-sofe-orange-dark text-white font-bold py-4 px-12 rounded-full text-xl transition duration-300 ease-in-out shadow-lg transform hover:scale-105">
+                            Submit Inquiry
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-sofe-blue text-white py-10 px-6">
+        <div class="container mx-auto text-center">
+            <p class="text-lg mb-4">&copy; 2023 Sofe Group. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Privacy Policy</a>
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Terms of Service</a>
+                <a href="contact.html" class="hover:text-sofe-orange transition duration-300 ease-in-out">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile navigation toggle
+        document.getElementById('nav-toggle').onclick = function () {
+            document.getElementById('nav-content').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

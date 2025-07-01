@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofe Group - Help Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light blue-gray background */
+        }
+        /* Custom colors for better control if needed, otherwise Tailwind defaults are fine */
+        .bg-sofe-blue { background-color: #1e3a8a; } /* Darker blue */
+        .text-sofe-blue { color: #1e3a8a; }
+        .bg-sofe-orange { background-color: #f97316; } /* Vibrant orange */
+        .text-sofe-orange { color: #f97316; }
+        .border-sofe-blue { border-color: #1e3a8a; }
+        .hover\:bg-sofe-orange-dark:hover { background-color: #ea580c; } /* Darker orange on hover */
+        .hover\:bg-sofe-blue-dark:hover { background-color: #172554; } /* Darker blue on hover */
+
+        /* Styles for sidebar toggle on smaller screens */
+        @media (max-width: 1023px) {
+            .sidebar-hidden {
+                transform: translateX(-100%);
+                position: absolute;
+                z-index: 40; /* Ensure it's above content but below header */
+            }
+            .sidebar-visible {
+                transform: translateX(0);
+            }
+        }
+
+        /* Active sidebar link style */
+        .sidebar-nav-link.active {
+            background-color: #f97316; /* Orange background for active link */
+            color: white;
+            font-weight: 600; /* Semi-bold */
+        }
+
+        /* FAQ accordion styles */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .faq-answer.open {
+            max-height: 200px; /* Adjust as needed for content height */
+            transition: max-height 0.3s ease-in;
+        }
+    </style>
+</head>
+<body class="text-gray-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md py-4 px-6 md:px-12 fixed w-full z-50">
+        <nav class="container mx-auto flex justify-between items-center flex-wrap">
+            <div class="flex items-center flex-shrink-0 text-sofe-blue mr-6">
+                <span class="font-extrabold text-3xl tracking-tight">Sofe Group</span>
+                
+            </div>
+            <div class="block lg:hidden">
+                <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-sofe-blue border-sofe-blue hover:text-sofe-orange hover:border-sofe-orange">
+                    <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                </button>
+            </div>
+            <div id="nav-content" class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-4 lg:mt-0">
+                <div class="text-lg lg:flex-grow" style="text-align: center;">
+                    <a href="index.html#home" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Home</a>
+                    <a href="index.html#services" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Services</a>
+                    <a href="consult.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Consult</a>
+                    <a href="events.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Events</a>
+                    <a href="index.html#about-us" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">About Us</a>
+                    <a href="help-dashboard.html" class="block mt-4 lg:inline-block lg:mt-0 text-sofe-blue font-bold mr-6 transition duration-300 ease-in-out">Help</a> </div>
+                <div class="mt-4 lg:mt-0">
+                    <a href="#" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out shadow-lg">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="flex flex-1 pt-20"> <aside id="sidebar" class="bg-sofe-blue text-white w-64 p-6 space-y-6 flex-shrink-0 lg:sticky top-20 h-[calc(100vh-80px)] overflow-y-auto transition-transform duration-300 ease-in-out sidebar-hidden lg:sidebar-visible">
+            <h3 class="text-2xl font-bold mb-4">Help Center</h3>
+            <nav class="space-y-3">
+                <a href="#faq" class="sidebar-nav-link flex items-center text-lg py-2 px-4 rounded-lg hover:bg-sofe-orange transition duration-300 ease-in-out active">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9.228a4.5 4.5 0 117.542 0M15 13a3 3 0 11-6 0 3 3 0 016 0zm-6 0h.01M12 6v.01M12 18v.01M12 21h.01M12 3h.01M18 12h.01M6 12h.01"></path></svg>
+                    FAQs
+                </a>
+                <a href="#contact-support" class="sidebar-nav-link flex items-center text-lg py-2 px-4 rounded-lg hover:bg-sofe-orange transition duration-300 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    Contact Support
+                </a>
+                <a href="#my-tickets" class="sidebar-nav-link flex items-center text-lg py-2 px-4 rounded-lg hover:bg-sofe-orange transition duration-300 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M17 12h.01"></path></svg>
+                    My Tickets
+                </a>
+                <a href="#knowledge-base" class="sidebar-nav-link flex items-center text-lg py-2 px-4 rounded-lg hover:bg-sofe-orange transition duration-300 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.794 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.794 5 16.5 5c1.706 0 3.332.477 4.5 1.253v13C19.832 18.477 18.206 18 16.5 18c-1.706 0-3.332.477-4.5 1.253"></path></svg>
+                    Knowledge Base
+                </a>
+                <a href="#tutorials" class="sidebar-nav-link flex items-center text-lg py-2 px-4 rounded-lg hover:bg-sofe-orange transition duration-300 ease-in-out">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    Video Tutorials
+                </a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 lg:p-10">
+            <button id="sidebar-toggle" class="lg:hidden fixed bottom-6 right-6 bg-sofe-orange text-white p-4 rounded-full shadow-lg z-40">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+
+            <h1 class="text-4xl md:text-5xl font-extrabold text-sofe-blue mb-8">Sofe Group Help Center</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          
+            <section class="mb-12">
+                <div class="bg-white rounded-xl shadow-md p-6 flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+                    <input type="text" placeholder="Search for answers..." class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange focus:border-transparent text-lg">
+                    <button class="bg-sofe-blue text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-sofe-blue-dark transition duration-300 ease-in-out shadow-md">
+                        Search
+                    </button>
+                </div>
+            </section>
+
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Quick Access</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-sofe-orange cursor-pointer hover:shadow-lg transition duration-300 ease-in-out">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Account & Login Issues</h3>
+                        <p class="text-gray-600">Troubleshoot login problems or manage your account settings.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-sofe-blue cursor-pointer hover:shadow-lg transition duration-300 ease-in-out">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Course Enrollment & Access</h3>
+                        <p class="text-gray-600">Get help with enrolling in courses or accessing course materials.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-sofe-orange cursor-pointer hover:shadow-lg transition duration-300 ease-in-out">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Payment & Billing</h3>
+                        <p class="text-gray-600">Questions about payments, subscriptions, or refunds.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="faq" class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Frequently Asked Questions</h2>
+                <div class="bg-white rounded-xl shadow-md p-6 space-y-4">
+                    <div class="border-b border-gray-200 pb-4 last:border-b-0">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-2 font-semibold text-lg text-gray-700 hover:text-sofe-blue transition duration-200">
+                            <span>How do I reset my password?</span>
+                            <svg class="w-5 h-5 transform rotate-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="faq-answer text-gray-600 pt-2">
+                            <p>To reset your password, navigate to the login page and click on the "Forgot Password?" link. Enter your registered email address, and we'll send you a link to reset your password.</p>
+                        </div>
+                    </div>
+                    <div class="border-b border-gray-200 pb-4 last:border-b-0">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-2 font-semibold text-lg text-gray-700 hover:text-sofe-blue transition duration-200">
+                            <span>How can I enroll in a new course?</span>
+                            <svg class="w-5 h-5 transform rotate-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="faq-answer text-gray-600 pt-2">
+                            <p>You can enroll in a new course by visiting the "Courses" section from your main dashboard. Browse the available courses, click on the one you're interested in, and follow the enrollment instructions.</p>
+                        </div>
+                    </div>
+                    <div class="border-b border-gray-200 pb-4 last:border-b-0">
+                        <button class="faq-question w-full text-left flex justify-between items-center py-2 font-semibold text-lg text-gray-700 hover:text-sofe-blue transition duration-200">
+                            <span>What payment methods are accepted?</span>
+                            <svg class="w-5 h-5 transform rotate-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="faq-answer text-gray-600 pt-2">
+                            <p>We accept various payment methods including major credit cards (Visa, MasterCard, American Express), PayPal, and select cryptocurrency payments.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact-support" class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Contact Support</h2>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <p class="text-gray-700 mb-4">Can't find what you're looking for? Send us a message, and our support team will get back to you as soon as possible.</p>
+                   
+                 
+                    <form method="POST" action="{{ url_for('contact_support') }}" class="space-y-4">
+                       
+                        <div>
+                            <label for="name" class="block text-gray-700 text-sm font-semibold mb-2">Your Name</label>
+                            <input type="text" id="name" name="name"  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange" value="{{ user.name }}" readonly>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-700 text-sm font-semibold mb-2">Your Email</label>
+                            <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange" value="{{ user.email }}" readonly>
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-gray-700 text-sm font-semibold mb-2">Subject</label>
+                            <input type="text" id="subject" name="subject" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange" placeholder="Issue with my account">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-700 text-sm font-semibold mb-2">Your Message</label>
+                            <textarea id="message" name="message" rows="5" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sofe-orange" placeholder="Describe your issue in detail..."></textarea>
+                        </div>
+                        <button type="submit" class="bg-sofe-orange text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-sofe-orange-dark transition duration-300 ease-in-out shadow-lg">
+                            Submit Request
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="my-tickets" class="mb-12 py-10 bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">My Support Tickets</h2>
+                <p class="text-gray-700">View the status and history of your submitted support tickets here.</p>
+            </section>
+
+            <section id="knowledge-base" class="mb-12 py-10 bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Knowledge Base</h2>
+                <p class="text-gray-700">Explore in-depth articles and guides on various topics.</p>
+            </section>
+
+            <section id="tutorials" class="mb-12 py-10 bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Video Tutorials</h2>
+                <p class="text-gray-700">Watch video guides to learn how to use platform features.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="bg-sofe-blue text-white py-10 px-6 mt-auto">
+        <div class="container mx-auto text-center">
+            <p class="text-lg mb-4">&copy; 2023 Sofe Group. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Privacy Policy</a>
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Terms of Service</a>
+                <a href="contact.html" class="hover:text-sofe-orange transition duration-300 ease-in-out">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile navigation toggle for main header
+        document.getElementById('nav-toggle').onclick = function () {
+            document.getElementById('nav-content').classList.toggle('hidden');
+        }
+
+        // Sidebar toggle for smaller screens
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+
+        // Initially hide sidebar on small screens
+        function setSidebarVisibility() {
+            if (window.innerWidth < 1024) { // Tailwind's 'lg' breakpoint is 1024px
+                sidebar.classList.add('sidebar-hidden');
+                sidebar.classList.remove('sidebar-visible');
+            } else {
+                sidebar.classList.remove('sidebar-hidden');
+                sidebar.classList.add('sidebar-visible');
+            }
+        }
+
+        // Set initial visibility
+        setSidebarVisibility();
+
+        // Listen for window resize to adjust sidebar visibility
+        window.addEventListener('resize', setSidebarVisibility);
+
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('sidebar-hidden');
+            sidebar.classList.toggle('sidebar-visible');
+        });
+
+        // Close sidebar when a link is clicked on mobile
+        document.querySelectorAll('#sidebar a').forEach(anchor => {
+            anchor.addEventListener('click', function () {
+                if (window.innerWidth < 1024) {
+                    sidebar.classList.add('sidebar-hidden');
+                    sidebar.classList.remove('sidebar-visible');
+                }
+            });
+        });
+
+        // Smooth scrolling and active link highlighting for sidebar links
+        document.querySelectorAll('#sidebar a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Remove active class from all links
+                document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+
+                // Add active class to the clicked link
+                this.classList.add('active');
+
+                // Smooth scroll to section
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // FAQ Accordion functionality
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('svg');
+
+                // Toggle the 'open' class on the answer
+                answer.classList.toggle('open');
+                // Rotate the arrow icon
+                icon.classList.toggle('rotate-180');
+            });
+        });
+    </script>
+</body>
+</html>

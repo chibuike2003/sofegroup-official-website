@@ -1,0 +1,13 @@
+import os
+import re
+from flask import Flask, render_template, request, redirect, flash, url_for,session
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime
+
+import string, random
+
+app = Flask(__name__)
+app.secret_key = 'your-secret-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/sofe'  # Adjust based on your MySQL settings
+db = SQLAlchemy(app)

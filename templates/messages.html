@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages & Alerts Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-accent: #1a73e8; /* Google Blue-like for primary actions/highlights */
+            --secondary-accent: #34a853; /* Google Green-like for success/positive */
+            --warning-color: #fbbc05; /* Google Yellow-like for warnings */
+            --danger-color: #ea4335; /* Google Red-like for errors/critical */
+            --background-body: #f5f7fa; /* Light gray background */
+            --background-card: #ffffff; /* White card background */
+            --text-primary: #202124; /* Dark gray for main text */
+            --text-secondary: #5f6368; /* Medium gray for secondary text */
+            --border-light: #dadce0; /* Light gray border */
+            --shadow-subtle: 0 1px 3px rgba(60, 64, 67, 0.08); /* Very subtle shadow */
+            --shadow-medium: 0 4px 8px rgba(60, 64, 67, 0.1);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-body);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 25px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        header h1 {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-actions button {
+            padding: 10px 22px;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            background-color: var(--background-card);
+            color: var(--primary-accent);
+            font-size: 0.95em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .header-actions button:hover {
+            background-color: var(--primary-accent);
+            color: white;
+            border-color: var(--primary-accent);
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-1px);
+        }
+
+        .card {
+            background-color: var(--background-card);
+            border-radius: 8px;
+            box-shadow: var(--shadow-subtle);
+            padding: 30px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            font-size: 1.4em;
+            color: var(--text-primary);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 500;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        /* Alert Section Styling */
+        .alerts-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .alert-item {
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .alert-item.info {
+            background-color: #e3f2fd; /* Light blue */
+            border: 1px solid #90caf9;
+            color: #1565c0;
+        }
+
+        .alert-item.warning {
+            background-color: #fffde7; /* Light yellow */
+            border: 1px solid #ffee58;
+            color: #f9a825;
+        }
+
+        .alert-item.danger {
+            background-color: #ffebee; /* Light red */
+            border: 1px solid #ef9a9a;
+            color: #c62828;
+        }
+
+        .alert-item.success {
+            background-color: #e8f5e9; /* Light green */
+            border: 1px solid #a5d6a7;
+            color: #2e7d32;
+        }
+
+        .alert-icon {
+            font-size: 1.5em;
+            line-height: 1;
+        }
+
+        .alert-content strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Messages Section Styling */
+        .messages-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .message-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .message-item:hover {
+            background-color: var(--background-body);
+        }
+
+        .message-item:last-child {
+            border-bottom: none;
+        }
+
+        .message-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .message-status.unread {
+            background-color: var(--primary-accent);
+        }
+
+        .message-status.read {
+            background-color: var(--border-light);
+        }
+
+        .message-content {
+            flex-grow: 1;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .message-header strong {
+            font-weight: 500;
+            font-size: 1em;
+            color: var(--text-primary);
+        }
+
+        .message-header .timestamp {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .message-subject {
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .message-preview {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: calc(100% - 120px); /* Adjust based on timestamp width */
+        }
+
+        .message-item.read .message-subject,
+        .message-item.read .message-preview {
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 25px;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            header h1 {
+                font-size: 2em;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .container {
+                margin: 20px auto;
+                padding: 0 15px;
+            }
+            .message-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .message-preview {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Messages & Alerts</h1>
+            <div class="header-actions">
+                <button>Compose New</button>
+                <button>Mark All Read</button>
+            </div>
+        </header>
+
+        <div class="alerts-section">
+            <div class="alert-item info">
+                <span class="alert-icon">&#x2139;</span> <div class="alert-content">
+                    <strong>Information: System Maintenance Scheduled</strong>
+                    <p>Our services will undergo maintenance on June 5th, 2025, from 2:00 AM to 4:00 AM UTC. Expect minor disruptions.</p>
+                </div>
+            </div>
+            <div class="alert-item warning">
+                <span class="alert-icon">&#x26A0;</span> <div class="alert-content">
+                    <strong>Warning: Storage Usage Exceeding Limit</strong>
+                    <p>Your current storage usage is at 90%. Please upgrade your plan or delete old files to avoid service interruption.</p>
+                </div>
+            </div>
+            <div class="alert-item danger">
+                <span class="alert-icon">&#x2716;</span> <div class="alert-content">
+                    <strong>Critical: Security Vulnerability Detected</strong>
+                    <p>Immediate action required. Please update your password and review recent activity in your account settings.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Your Messages</h2>
+            <ul class="messages-list">
+                <li class="message-item unread">
+                    <div class="message-status unread"></div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <strong>Support Team</strong>
+                            <span class="timestamp">Just now</span>
+                        </div>
+                        <div class="message-subject">New reply to your support ticket #78901</div>
+                        <div class="message-preview">Hi John, thank you for reaching out. We have investigated your issue and found a solution...</div>
+                    </div>
+                </li>
+                <li class="message-item unread">
+                    <div class="message-status unread"></div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <strong>System Notification</strong>
+                            <span class="timestamp">5 mins ago</span>
+                        </div>
+                        <div class="message-subject">Your monthly report is ready for download</div>
+                        <div class="message-preview">Your detailed analytics report for May 2025 is now available in your dashboard.</div>
+                    </div>
+                </li>
+                <li class="message-item read">
+                    <div class="message-status read"></div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <strong>Marketing Team</strong>
+                            <span class="timestamp">Yesterday</span>
+                        </div>
+                        <div class="message-subject">Exclusive Offer: Get 20% off your next upgrade!</div>
+                        <div class="message-preview">Don't miss out on our limited-time offer for premium features. Upgrade today...</div>
+                    </div>
+                </li>
+                <li class="message-item read">
+                    <div class="message-status read"></div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <strong>Community Forum</strong>
+                            <span class="timestamp">May 26, 2025</span>
+                        </div>
+                        <div class="message-subject">New post in "General Discussion" by UserXYZ</div>
+                        <div class="message-preview">UserXYZ has started a new discussion: "Tips for optimizing your workflow"...</div>
+                    </div>
+                </li>
+                <li class="message-item read">
+                    <div class="message-status read"></div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <strong>Admin</strong>
+                            <span class="timestamp">May 20, 2025</span>
+                        </div>
+                        <div class="message-subject">Welcome to the platform!</div>
+                        <div class="message-preview">We're thrilled to have you onboard. Here are some resources to get you started...</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        Messages & Alerts Center &copy; 2025. All rights reserved.
+    </footer>
+</body>
+</html>

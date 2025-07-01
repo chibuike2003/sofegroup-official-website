@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofe Group - Building Future Africa Through Tech</title>
+    <link rel="icon" href="../static/logo.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light blue-gray background */
+        }
+        /* Custom colors for better control if needed, otherwise Tailwind defaults are fine */
+        .bg-sofe-blue { background-color: #1e3a8a; } /* Darker blue */
+        .text-sofe-blue { color: #1e3a8a; }
+        .bg-sofe-orange { background-color: #f97316; } /* Vibrant orange */
+        .text-sofe-orange { color: #f97316; }
+        .border-sofe-blue { border-color: #1e3a8a; }
+        .hover\:bg-sofe-orange-dark:hover { background-color: #ea580c; } /* Darker orange on hover */
+        .hover\:bg-sofe-blue-dark:hover { background-color: #172554; } /* Darker blue on hover */
+
+        /* Custom styles for testimonial animation */
+        .testimonial-item {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2.5rem; /* Equivalent to p-10 */
+        }
+        .testimonial-item.active {
+            opacity: 1;
+            position: relative; /* Active item takes up space */
+        }
+        .testimonial-container {
+            position: relative;
+            min-height: 350px; /* Ensure enough height for content */
+            overflow: hidden;
+        }
+        .testimonial-nav-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .testimonial-nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Carousel specific styles */
+        .carousel-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .carousel-item.active {
+            opacity: 1;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 1rem;
+            cursor: pointer;
+            z-index: 20; /* Above the overlay and content */
+            border-radius: 0.25rem;
+        }
+        .carousel-control.left {
+            left: 1rem;
+        }
+        .carousel-control.right {
+            right: 1rem;
+        }
+        .carousel-indicators {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 20;
+        }
+        .carousel-indicator {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .carousel-indicator.active {
+            background-color: white;
+        }
+
+        /* Logo specific styles */
+        .logo-img {
+            height: 40px; /* Adjust height as needed */
+            margin-right: 10px; /* Space between logo and text */
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md py-4 px-6 md:px-12 fixed w-full z-50">
+        <nav class="container mx-auto flex justify-between items-center flex-wrap">
+            <div class="flex items-center flex-shrink-0 text-sofe-blue mr-6">
+                <img src="../static/logo.png" alt="Sofe Group Logo" class="logo-img">
+            </div>
+            <div class="block lg:hidden">
+                <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-sofe-blue border-sofe-blue hover:text-sofe-orange hover:border-sofe-orange">
+                    <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                </button>
+            </div>
+            <div id="nav-content" class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-4 lg:mt-0">
+                <div class="text-lg lg:flex-grow" style="text-align: center;">
+                    <a href="#home" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Home</a>
+                    <a href="#services" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Services</a>
+                    <a href="consult.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Consult</a>
+                    <a href="event.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Events</a>
+                    <a href="#about-us" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">About Us</a>
+                </div>
+                <div>
+                    {% if session.get('user_id') %}
+                        <span class="inline-block text-lg px-6 py-3 leading-none rounded-full text-sofe-blue bg-gray-100 mt-4 lg:mt-0 shadow-lg mr-4">Welcome, {{ session.get('name', '').split(' ')[0] }}</span>
+                        <a href="{{ url_for('dashboard') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-blue hover:bg-sofe-blue-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Dashboard</a>
+                        <a href="{{ url_for('logout') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg ml-4">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('signup') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Login/Sign up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="relative text-white flex items-center justify-center min-h-screen py-20 pt-32 lg:pt-0 overflow-hidden">
+        <div class="carousel-container absolute inset-0">
+            <div class="carousel-item active">
+                <img src="../static/IMG_3671.HEIC" alt="Sofe Group Image 1">
+            </div>
+            <div class="carousel-item">
+                <img src="../static/IMG_3660.HEIC" alt="Sofe Group Image 2">
+            </div>
+            <div class="carousel-item">
+                <img src="../static/IMG_3884.HEIC" alt="Sofe Group Image 3">
+            </div>
+            <div class="carousel-item">
+                <img src="../static/3.png" alt="Sofe Group Image 3">
+            </div>
+            <div class="carousel-item">
+                <img src="../static/14.png" alt="Sofe Group Image 3">
+            </div>
+            <div class="carousel-item">
+                <img src="../static/1.png" alt="Sofe Group Image 3">
+            </div>
+        </div>
+
+        <div class="absolute inset-0 bg-black opacity-60"></div>
+
+        <div class="carousel-control left" id="prevBtn">&#10094;</div>
+        <div class="carousel-control right" id="nextBtn">&#10095;</div>
+
+        <div class="carousel-indicators" id="carouselIndicators">
+        </div>
+
+        <div class="container mx-auto text-center relative z-10 px-6">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 drop-shadow-2xl">
+                BUILDING FUTURE AFRICA THROUGH TECH
+            </h1>
+            <p class="text-xl md:text-2xl lg:text-3xl font-medium mb-10 max-w-3xl mx-auto drop-shadow-lg">
+                Transforming Africa through innovative blockchain and tech solutions
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-6">
+                <a href="#services" class="inline-block bg-sofe-orange hover:bg-sofe-orange-dark text-white font-bold py-4 px-10 rounded-full text-xl transition duration-300 ease-in-out shadow-xl transform hover:scale-105">
+                    Get Started
+                </a>
+                <a href="{{ url_for('contact') }}" class="inline-block bg-transparent border-2 border-white hover:bg-white hover:text-sofe-blue text-black font-bold py-4 px-10 rounded-full text-xl transition duration-300 ease-in-out shadow-xl transform hover:scale-105">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Navbar toggle
+        document.getElementById('nav-toggle').onclick = function() {
+            document.getElementById('nav-content').classList.toggle('hidden');
+        };
+
+        // Carousel functionality
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const carouselIndicators = document.getElementById('carouselIndicators');
+        let currentIndex = 0;
+        let intervalId; // To store the interval for auto-play
+
+        function showSlide(index) {
+            carouselItems.forEach((item, i) => {
+                item.classList.remove('active');
+                if (i === index) {
+                    item.classList.add('active');
+                }
+            });
+            updateIndicators(index);
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % carouselItems.length;
+            showSlide(currentIndex);
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length;
+            showSlide(currentIndex);
+        }
+
+        function createIndicators() {
+            carouselItems.forEach((_, i) => {
+                const indicator = document.createElement('div');
+                indicator.classList.add('carousel-indicator');
+                if (i === 0) {
+                    indicator.classList.add('active');
+                }
+                indicator.addEventListener('click', () => {
+                    clearInterval(intervalId); // Clear auto-play on manual navigation
+                    showSlide(i);
+                    startAutoPlay(); // Restart auto-play
+                });
+                carouselIndicators.appendChild(indicator);
+            });
+        }
+
+        function updateIndicators(activeIndex) {
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            indicators.forEach((indicator, i) => {
+                indicator.classList.remove('active');
+                if (i === activeIndex) {
+                    indicator.classList.add('active');
+                }
+            });
+        }
+
+        function startAutoPlay() {
+            intervalId = setInterval(nextSlide, 5000); // Change image every 5 seconds
+        }
+
+        // Event Listeners
+        prevBtn.addEventListener('click', () => {
+            clearInterval(intervalId); // Clear auto-play on manual navigation
+            prevSlide();
+            startAutoPlay(); // Restart auto-play
+        });
+
+        nextBtn.addEventListener('click', () => {
+            clearInterval(intervalId); // Clear auto-play on manual navigation
+            nextSlide();
+            startAutoPlay(); // Restart auto-play
+        });
+
+        // Initialize carousel
+        createIndicators();
+        showSlide(currentIndex);
+        startAutoPlay(); // Start auto-play when the page loads
+    </script>
+
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-sofe-blue mb-16">Our Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center transform hover:scale-105 transition duration-300 ease-in-out border-t-4 border-sofe-orange">
+                    <h3 class="text-3xl font-bold text-sofe-blue mb-4">Sofe Blockchain Hub</h3>
+                    <p class="text-xl font-semibold text-gray-700 mb-4">Stay ahead with relevant Blockchain and crypto insight</p>
+                    <p class="text-gray-600 leading-relaxed mb-8">Our vibrant crypto community is just all you need to stay ahead and be profitable in the crypto space. Explore up-to-date daily insights, Traders community, Airdrop community, Premium community for those looking to maximize their crypto yield and our student community expanding across universities in Nigeria and Africa.</p>
+                    <a href="commuity.html" class="inline-block bg-sofe-orange hover:bg-sofe-orange-dark text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out shadow-md">
+                        Join our Community Today
+                    </a>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center transform hover:scale-105 transition duration-300 ease-in-out border-t-4 border-sofe-blue">
+                    <h3 class="text-3xl font-bold text-sofe-blue mb-4">Sofe Media</h3>
+                    <p class="text-xl font-semibold text-gray-700 mb-4">Your Partner in Storytelling, Branding, and Innovation</p>
+                    <p class="text-gray-600 leading-relaxed mb-8">We specialize in delivering top-tier media services tailored to your brand’s needs. From branding and storytelling to content creation, event management, and comprehensive coverage, we help you connect with your audience and amplify your message.</p>
+                    <a href="{{ url_for('hire') }}" class="inline-block bg-sofe-orange hover:bg-sofe-orange-dark text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out shadow-md">
+                        Hire Us Today
+                    </a>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center transform hover:scale-105 transition duration-300 ease-in-out border-t-4 border-sofe-orange">
+                    <h3 class="text-3xl font-bold text-sofe-blue mb-4">Sofe Academy</h3>
+                    <p class="text-xl font-semibold text-gray-700 mb-4">Empowering the Next Gen. of Blockchain Professionals</p>
+                    <p class="text-gray-600 leading-relaxed mb-8">Our hands-on training programs are designed to bridge the gap between ambition and expertise, offering courses that cover everything from blockchain fundamentals to advanced development and real-world applications.</p>
+                    {% if session.get('user_id') %}
+                        <a href="{{ url_for('dashboard') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-blue hover:bg-sofe-blue-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Dashboard</a>
+                        <a href="{{ url_for('logout') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg ml-4">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('signup') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Login/Sign up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-20 bg-sofe-blue text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-12">What Our Clients Say</h2>
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-xl p-10 text-gray-800 relative">
+                <p class="text-2xl italic leading-relaxed mb-6">
+                    <span id="shortTestimonial">
+                        "I am here today to testify about the important work that Sofe Group is doing to promote cryptocurrency and blockchain. Sofe Group's work is essential to the development and adoption of cryptocurrency and blockchain technology."
+                    </span>
+                    <span id="fullTestimonial" class="hidden">
+                        "I am here today to testify about the important work that Sofe Group is doing to promote cryptocurrency and blockchain. Sofe Group's work is essential to the development and adoption of cryptocurrency and blockchain technology. They are helping to make these technologies more accessible and user-friendly, and they are working to build a more robust and secure infrastructure for the cryptocurrency and blockchain ecosystem. Sofe Group is also working to develop educational resources about cryptocurrency and blockchain technology. These resources are designed to help people understand how these technologies work and how to use them responsibly. I believe that Sofe Group's work is essential to the future of cryptocurrency and blockchain technology."
+                    </span>
+                </p>
+                <button id="readMoreBtn" class="bg-sofe-orange text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-orange-700 transition duration-300">
+                    Read More
+                </button>
+                <p class="text-xl font-bold text-sofe-orange mt-6">- Joshua Jonah</p>
+                <p class="text-lg text-gray-600">Managing Director, Eloheem Prime Agro Farms Limited</p>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        document.getElementById('readMoreBtn').addEventListener('click', function() {
+            var short = document.getElementById('shortTestimonial');
+            var full = document.getElementById('fullTestimonial');
+            var button = this;
+    
+            if (full.classList.contains('hidden')) {
+                short.classList.add('hidden');
+                full.classList.remove('hidden');
+                button.textContent = 'Show Less';
+            } else {
+                full.classList.add('hidden');
+                short.classList.remove('hidden');
+                button.textContent = 'Read More';
+            }
+        });
+    </script>
+
+    <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-sofe-blue mb-12">More Testimonials</h2>
+            <div class="relative max-w-4xl mx-auto bg-white rounded-xl shadow-xl text-gray-800 overflow-hidden testimonial-container">
+            
+                <div class="testimonial-item">
+                    <p class="text-2xl italic leading-relaxed mb-6">"This is an amazing quote from a happy client."</p>
+                    <p class="text-xl font-bold text-sofe-orange">- Client Name</p>
+                    <p class="text-lg text-gray-600">Client Title, Company</p>
+                </div>
+                
+            </div>
+            <div class="flex justify-center items-center gap-4 mt-8">
+                <button id="prevTestimonial" class="testimonial-nav-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div id="testimonialDots" class="flex gap-2">
+                    </div>
+                <button id="nextTestimonial" class="testimonial-nav-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+    <section id="about-us" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-sofe-blue text-center mb-16">About Us</h2>
+    
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                <div class="bg-gray-50 rounded-xl shadow-md p-8 border-l-4 border-sofe-orange">
+                    <h3 class="text-3xl font-bold text-sofe-blue mb-4">Our Vision</h3>
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        To pioneer a future where Africa is at the forefront of global innovation, leveraging blockchain and emerging technologies to drive sustainable growth, empower communities, and create transformative solutions for a decentralized world.
+                    </p>
+                </div>
+    
+                <div class="bg-gray-50 rounded-xl shadow-md p-8 border-l-4 border-sofe-blue">
+                    <h3 class="text-3xl font-bold text-sofe-blue mb-4">Our Mission</h3>
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        To become a leading brand in building future Africa through innovative blockchain and new tech solutions.
+                    </p>
+                </div>
+            </div>
+    
+            <div class="bg-gray-50 rounded-xl shadow-md p-8 mb-16 border-t-4 border-sofe-orange">
+                <h3 class="text-3xl font-bold text-sofe-blue mb-4">Sofe Spirit</h3>
+                <p class="text-lg text-gray-700 leading-relaxed" id="sofeSpiritShort">
+                    Our greatest asset is the people we work with. Our tribe. At Sofe, we understand that “the people are the business.” That is why we prioritize values and skills. Our work team is always updated in terms of information, technology, techniques, and skills. They go through a series of training, seminars, and workshops annually. At Sofe, we believe that it is the right of EVERY customer to receive quality service. <strong class="text-sofe-orange">Premium is Sofe spirit!</strong>
+                </p>
+                <p class="text-lg text-gray-700 leading-relaxed hidden" id="sofeSpiritFull">
+                    Our greatest asset is the people we work with. Our tribe. At Sofe, we understand that “the people are the business.” That is why we prioritize values and skills. Our work team is always updated in terms of information, technology, techniques, and skills. They go through a series of training, seminars, and workshops annually. At Sofe, we believe that it is the right of EVERY customer to receive quality service. <strong class="text-sofe-orange">Premium is Sofe spirit!</strong> <br><br> (Add more detailed content about Sofe Spirit here, or link to an external page for more info).
+                </p>
+                <a href="{{ url_for('about') }}" class="mt-6 inline-block bg-sofe-orange hover:bg-sofe-orange-dark text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out shadow-md">
+                    Read More
+                </a>
+            </div>
+    
+            <div class="bg-gray-50 rounded-xl shadow-md p-8 border-b-4 border-sofe-blue">
+                <h3 class="text-3xl font-bold text-sofe-blue mb-6 text-center">Core Values</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="text-center p-4">
+                        <h4 class="text-2xl font-bold text-sofe-orange mb-2">Integrity</h4>
+                        <p class="text-gray-700">We continually strive to be everything we say we are. We believe that transparency and credibility is an obligation we owe to our customers.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <h4 class="text-2xl font-bold text-sofe-orange mb-2">Co-win</h4>
+                        <p class="text-gray-700">We understand that the client is a reflection of our success as a company. So, we don’t work to be paid, we own the job. We represent your brand.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <h4 class="text-2xl font-bold text-sofe-orange mb-2">Loyalty</h4>
+                        <p class="text-gray-700">We respect innovation and we encourage investment. For us, every promising business idea counts. This is why we have an unswerving loyalty for our clients.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <h4 class="text-2xl font-bold text-sofe-orange mb-2">Premium</h4>
+                        <p class="text-gray-700">This is why we are a leading company in promoting a business brand. We believe that the right of every Sofe client is quality service.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        document.getElementById('readMoreAboutUsBtn').addEventListener('click', function() {
+            var shortContent = document.getElementById('sofeSpiritShort');
+            var fullContent = document.getElementById('sofeSpiritFull');
+            var button = this;
+    
+            if (fullContent.classList.contains('hidden')) {
+                shortContent.classList.add('hidden');
+                fullContent.classList.remove('hidden');
+                button.textContent = 'Show Less';
+            } else {
+                fullContent.classList.add('hidden');
+                shortContent.classList.remove('hidden');
+                button.textContent = 'Read More';
+            }
+        });
+    </script>
+    <footer class="bg-sofe-blue text-white py-10 px-6">
+        <div class="container mx-auto text-center">
+            <p class="text-lg mb-4">&copy; 2023 Sofe Group. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Privacy Policy</a>
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Terms of Service</a>
+                <a href="contact.html" class="hover:text-sofe-orange transition duration-300 ease-in-out">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Mobile navigation toggle
+        document.getElementById('nav-toggle').onclick = function () {
+            document.getElementById('nav-content').classList.toggle('hidden');
+        }
+
+        // Testimonial Carousel Logic
+        const testimonials = [
+            {
+                quote: "Sofe Group's insights into the crypto space are unparalleled. Their daily insights and premium community have significantly boosted my crypto yield. Highly recommend for anyone serious about blockchain!",
+                author: "Sarah Chen",
+                title: "Crypto Investor & Analyst",
+                image: "https://placehold.co/96x96/E0E0E0/343a40?text=SC" // Placeholder image for Sarah Chen
+            },
+            {
+                quote: "Working with Sofe Media was a game-changer for our brand. Their storytelling and content creation brought our vision to life and helped us connect with our audience on a deeper level.",
+                author: "David M. Obi",
+                title: "Founder, Innovate Africa",
+                image: "https://placehold.co/96x96/D0D0D0/343a40?text=DMO" // Placeholder image for David M. Obi
+            },
+            {
+                quote: "The Sofe Academy programs are truly empowering. I gained hands-on expertise in blockchain development that directly led to new career opportunities. A must for aspiring tech professionals in Africa!",
+                author: "Aisha Yusuf",
+                title: "Blockchain Developer",
+                image: "https://placehold.co/96x96/C0C0C0/343a40?text=AY" // Placeholder image for Aisha Yusuf
+            },
+            {
+                quote: "The team at Sofe Group embodies professionalism and integrity. Their commitment to quality service, as stated in their 'Premium is Sofe spirit!', is evident in every interaction.",
+                author: "Michael O'Connor",
+                title: "CEO, Global Tech Solutions",
+                image: "https://placehold.co/96x96/B0B0B0/343a40?text=MO" // Placeholder image for Michael O'Connor
+            }
+        ];
+
+        let currentTestimonialIndex = 0;
+        const testimonialContainer = document.querySelector('.testimonial-container');
+        const prevButton = document.getElementById('prevTestimonial');
+        const nextButton = document.getElementById('nextTestimonial');
+        const testimonialDotsContainer = document.getElementById('testimonialDots');
+        let autoSlideInterval;
+
+        // Function to render testimonials
+        function renderTestimonials() {
+            testimonialContainer.innerHTML = ''; // Clear existing content
+            testimonials.forEach((testimonial, index) => {
+                const testimonialDiv = document.createElement('div');
+                testimonialDiv.classList.add('testimonial-item', 'absolute', 'inset-0', 'flex', 'flex-col', 'justify-center', 'items-center', 'p-10');
+                testimonialDiv.innerHTML = `
+                    <img src="${testimonial.image}" alt="${testimonial.author}" class="w-24 h-24 rounded-full mb-4 object-cover shadow-md border-2 border-sofe-orange">
+                    <p class="text-xl md:text-2xl italic leading-relaxed mb-6">"${testimonial.quote}"</p>
+                    <p class="text-lg md:text-xl font-bold text-sofe-orange">- ${testimonial.author}</p>
+                    <p class="text-md md:text-lg text-gray-600">${testimonial.title}</p>
+                `;
+                testimonialContainer.appendChild(testimonialDiv);
+            });
+        }
+
+        // Function to show a specific testimonial
+        function showTestimonial(index) {
+            const items = document.querySelectorAll('.testimonial-item');
+            items.forEach((item, i) => {
+                item.classList.remove('active');
+                if (i === index) {
+                    item.classList.add('active');
+                }
+            });
+            updateDots(index);
+            currentTestimonialIndex = index;
+        }
+
+        // Function to update navigation dots
+        function updateDots(activeIndex) {
+            testimonialDotsContainer.innerHTML = '';
+            testimonials.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.classList.add('w-3', 'h-3', 'bg-gray-400', 'rounded-full', 'cursor-pointer', 'transition', 'duration-300', 'ease-in-out');
+                if (index === activeIndex) {
+                    dot.classList.remove('bg-gray-400');
+                    dot.classList.add('bg-sofe-orange');
+                }
+                dot.addEventListener('click', () => {
+                    clearInterval(autoSlideInterval); // Stop auto-slide on manual navigation
+                    showTestimonial(index);
+                    startAutoSlide(); // Restart auto-slide
+                });
+                testimonialDotsContainer.appendChild(dot);
+            });
+        }
+
+        // Function to go to the next testimonial
+        function nextTestimonial() {
+            let nextIndex = (currentTestimonialIndex + 1) % testimonials.length;
+            showTestimonial(nextIndex);
+        }
+
+        // Function to go to the previous testimonial
+        function prevTestimonial() {
+            let prevIndex = (currentTestimonialIndex - 1 + testimonials.length) % testimonials.length;
+            showTestimonial(prevIndex);
+        }
+
+        // Auto-slide functionality
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(nextTestimonial, 7000); // Change testimonial every 7 seconds
+        }
+
+        // Event Listeners for navigation buttons
+        prevButton.addEventListener('click', () => {
+            clearInterval(autoSlideInterval); // Stop auto-slide on manual navigation
+            prevTestimonial();
+            startAutoSlide(); // Restart auto-slide
+        });
+
+        nextButton.addEventListener('click', () => {
+            clearInterval(autoSlideInterval); // Stop auto-slide on manual navigation
+            nextTestimonial();
+            startAutoSlide(); // Restart auto-slide
+        });
+
+        // Initialize carousel on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTestimonials();
+            showTestimonial(currentTestimonialIndex);
+            startAutoSlide();
+        });
+    </script>
+</body>
+</html>

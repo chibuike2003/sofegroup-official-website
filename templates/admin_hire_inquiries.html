@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Hire Inquiries</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-gray-800 p-4 text-white">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('admin_dashboard') }}" class="text-2xl font-bold">Admin Panel</a>
+            <div>
+                <a href="{{ url_for('admin_dashboard') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Dashboard</a>
+                <a href="{{ url_for('all_users') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Users</a>
+                <a href="{{ url_for('view_hire_inquiries') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Hire Inquiries</a>
+                <a href="{{ url_for('view_contact_inquiries') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Contact Inquiries</a>
+                <a href="{{ url_for('view_help_requests') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Help Requests</a>
+                <a href="{{ url_for('view_testimonials') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md">Testimonials</a>
+                <a href="{{ url_for('logout') }}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md ml-4">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-4">
+                    {% for category, message in messages %}
+                        <div class="p-3 mb-2 rounded {% if category == 'danger' %}bg-red-100 text-red-700{% elif category == 'success' %}bg-green-100 text-green-700{% elif category == 'warning' %}bg-yellow-100 text-yellow-700{% elif category == 'info' %}bg-blue-100 text-blue-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Manage Hire Inquiries</h1>
+
+        {% if hire_inquiries %}
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full Name</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service Interest</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project Details</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submission Date</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for inquiry in hire_inquiries %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ inquiry.id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ inquiry.full_name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ inquiry.company_name or 'N/A' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ inquiry.email }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ inquiry.phone or 'N/A' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ inquiry.service_interest }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ inquiry.project_details[:50] }}...</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ inquiry.submission_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <form action="{{ url_for('delete_hire_inquiry', inquiry_id=inquiry.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this hire inquiry?');" class="inline">
+                                <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-600">No hire inquiries found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

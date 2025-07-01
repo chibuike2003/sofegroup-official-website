@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofe User Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import - Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        /* Style for editable input fields */
+        .profile-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-size: 1rem;
+            line-height: 1.5rem;
+            color: #1f2937; /* gray-900 */
+            background-color: #f9fafb; /* gray-50 */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .profile-input:focus {
+            outline: none;
+            border-color: #8B5CF6; /* purple-500 */
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2); /* ring-purple-300 */
+        }
+        /* Style for password change inputs, initially hidden */
+        .password-input-group {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            gap: 0.75rem; /* Equivalent to space-y-3 */
+        }
+        .password-input-group.active {
+            display: flex; /* Show when active */
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-4xl mx-auto my-8">
+            <div class="flex flex-col md:flex-row items-center md:justify-between pb-6 border-b border-gray-200 mb-6">
+                <div class="flex items-center space-x-4">
+                    <img src="https://placehold.co/100x100/A78BFA/FFFFFF?text=JD" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-purple-300 object-cover shadow-md">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800" id="userNameDisplay">Jane Doe</h1>
+                        <p class="text-lg text-gray-600">Sofe User</p>
+                    </div>
+                </div>
+                <div class="mt-4 md:mt-0 flex space-x-3">
+                    <button id="editProfileBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out">
+                        Edit Profile
+                    </button>
+                    <button id="saveChangesBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out hidden">
+                        Save Profile
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-purple-50 p-6 rounded-xl shadow-sm">
+                    <h2 class="text-2xl font-semibold text-purple-800 mb-4">Profile Information</h2>
+                    <div class="space-y-3 text-gray-700" id="profileInfoSection">
+                        <p>
+                            <strong class="font-medium">Email:</strong>
+                            <span id="emailDisplay">jane.doe@example.com</span>
+                            <input type="email" id="emailInput" value="jane.doe@example.com" class="profile-input hidden" readonly>
+                        </p>
+                        <p>
+                            <strong class="font-medium">Member Since:</strong>
+                            <span id="memberSinceDisplay">January 1, 2023</span>
+                            <input type="text" id="memberSinceInput" value="January 1, 2023" class="profile-input hidden" readonly>
+                        </p>
+                        <p>
+                            <strong class="font-medium">Location:</strong>
+                            <span id="locationDisplay">Lagos, Nigeria</span>
+                            <input type="text" id="locationInput" value="Lagos, Nigeria" class="profile-input hidden" readonly>
+                        </p>
+                        <p>
+                            <strong class="font-medium">Bio:</strong>
+                            <span id="bioDisplay">Passionate about technology and community building. Always eager to learn and connect.</span>
+                            <textarea id="bioInput" class="profile-input hidden" rows="3" readonly>Passionate about technology and community building. Always eager to learn and connect.</textarea>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-xl shadow-sm">
+                    <h2 class="text-2xl font-semibold text-blue-800 mb-4">Quick Stats</h2>
+                    <div class="space-y-3 text-gray-700">
+                        <p><strong class="font-medium">Projects Completed:</strong> 12</p>
+                        <p><strong class="font-medium">Active Courses:</strong> 3</p>
+                        <p><strong class="font-medium">Community Contributions:</strong> 45</p>
+                        <p><strong class="font-medium">Last Login:</strong> May 28, 2025</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-3 bg-green-50 p-6 rounded-xl shadow-sm">
+                    <h2 class="text-2xl font-semibold text-green-800 mb-4">Recent Activity</h2>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-center space-x-2">
+                            <span class="text-green-600">&#x2022;</span>
+                            <span>Completed "Introduction to AI" course.</span>
+                            <span class="text-sm text-gray-500 ml-auto">2 hours ago</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-green-600">&#x2022;</span>
+                            <span>Submitted project "Sofe Connect App".</span>
+                            <span class="text-sm text-gray-500 ml-auto">1 day ago</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-green-600">&#x2022;</span>
+                            <span>Commented on "Future of Sofe" forum post.</span>
+                            <span class="text-sm text-gray-500 ml-auto">3 days ago</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-green-600">&#x2022;</span>
+                            <span>Enrolled in "Advanced Data Science" course.</span>
+                            <span class="text-sm text-gray-500 ml-auto">1 week ago</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-3 bg-yellow-50 p-6 rounded-xl shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-semibold text-yellow-800">Settings & Preferences</h2>
+                        <div class="flex space-x-3">
+                            <button id="editSettingsBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out">
+                                Edit Settings
+                            </button>
+                            <button id="saveSettingsBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out hidden">
+                                Save Settings
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-4" id="settingsSection">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Email Notifications</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="emailNotificationsToggle" class="sr-only peer" checked disabled>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Dark Mode</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="darkModeToggle" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Preferred Language</span>
+                            <select id="languageSelect" class="profile-input w-auto" disabled>
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Timezone</span>
+                            <input type="text" id="timezoneInput" value="WAT (West Africa Time)" class="profile-input w-auto" readonly>
+                        </div>
+
+                        <div class="border-t border-gray-200 pt-4 mt-4">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">Change Password</h3>
+                            <button id="changePasswordBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out">
+                                Change Password
+                            </button>
+                            <div id="passwordChangeFields" class="password-input-group mt-4">
+                                <input type="password" id="currentPasswordInput" placeholder="Current Password" class="profile-input" disabled>
+                                <input type="password" id="newPasswordInput" placeholder="New Password" class="profile-input" disabled>
+                                <input type="password" id="confirmNewPasswordInput" placeholder="Confirm New Password" class="profile-input" disabled>
+                                <button id="savePasswordBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out">
+                                    Save New Password
+                                </button>
+                                <button id="cancelPasswordBtn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-gray-200 pt-4 mt-4">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">Bank Account Details</h3>
+                            <div id="bankDetailsSection" class="space-y-3 text-gray-700">
+                                <p>
+                                    <strong class="font-medium">Bank Name:</strong>
+                                    <span id="bankNameDisplay">Not Set</span>
+                                    <input type="text" id="bankNameInput" name="bankName" value="" class="profile-input hidden" readonly>
+                                </p>
+                                <p>
+                                    <strong class="font-medium">Account Number:</strong>
+                                    <span id="accountNumberDisplay">Not Set</span>
+                                    <input type="text" id="accountNumberInput" name="accountNumber" value="" class="profile-input hidden" readonly>
+                                </p>
+                                <p>
+                                    <strong class="font-medium">Account Name:</strong>
+                                    <span id="accountNameDisplay">Not Set</span>
+                                    <input type="text" id="accountNameInput" name="accountName" value="" class="profile-input hidden" readonly>
+                                </p>
+                            </div>
+                        </div>
+
+                        <button class="w-fit bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md transition duration-300 ease-in-out mt-4">
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const saveChangesBtn = document.getElementById('saveChangesBtn');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+
+            const profileFields = [
+                { display: document.getElementById('emailDisplay'), input: document.getElementById('emailInput') },
+                { display: document.getElementById('memberSinceDisplay'), input: document.getElementById('memberSinceInput') },
+                { display: document.getElementById('locationDisplay'), input: document.getElementById('locationInput') },
+                { display: document.getElementById('bioDisplay'), input: document.getElementById('bioInput') }
+            ];
+
+            let isEditingProfile = false;
+
+            // Function to toggle edit mode for profile information
+            function toggleEditProfileMode() {
+                isEditingProfile = !isEditingProfile;
+
+                if (isEditingProfile) {
+                    // Enter edit mode
+                    editProfileBtn.textContent = 'Cancel Edit';
+                    saveChangesBtn.classList.remove('hidden');
+
+                    profileFields.forEach(field => {
+                        field.display.classList.add('hidden');
+                        field.input.classList.remove('hidden');
+                        field.input.removeAttribute('readonly'); // Make input editable
+                    });
+
+                    // For the user name at the top
+                    const currentUserName = userNameDisplay.textContent;
+                    userNameDisplay.innerHTML = `<input type="text" id="userNameInput" value="${currentUserName}" class="profile-input inline-block w-auto text-3xl font-bold text-gray-800">`;
+
+                } else {
+                    // Exit edit mode (or cancel)
+                    editProfileBtn.textContent = 'Edit Profile';
+                    saveChangesBtn.classList.add('hidden'); // Hide save button if cancelled
+
+                    profileFields.forEach(field => {
+                        field.display.classList.remove('hidden');
+                        field.input.classList.add('hidden');
+                        field.input.setAttribute('readonly', true); // Make input read-only again
+                    });
+
+                    // Restore user name display
+                    const userNameInput = document.getElementById('userNameInput');
+                    if (userNameInput) {
+                        userNameDisplay.textContent = userNameInput.value;
+                    }
+                }
+            }
+
+            // Function to save profile changes (in a real app, this would send data to a server)
+            function saveProfileChanges() {
+                // Update display spans with new input values
+                profileFields.forEach(field => {
+                    field.display.textContent = field.input.value;
+                });
+
+                // Update user name display
+                const userNameInput = document.getElementById('userNameInput');
+                if (userNameInput) {
+                    userNameDisplay.textContent = userNameInput.value;
+                }
+
+                // Exit edit mode after saving
+                toggleEditProfileMode();
+                console.log("Profile changes saved (frontend only). In a real app, this data would be sent to a backend.");
+            }
+
+            // Event Listeners for Profile
+            editProfileBtn.addEventListener('click', toggleEditProfileMode);
+            saveChangesBtn.addEventListener('click', saveProfileChanges);
+
+
+            // --- Settings Section Logic ---
+            const editSettingsBtn = document.getElementById('editSettingsBtn');
+            const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+            const emailNotificationsToggle = document.getElementById('emailNotificationsToggle');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const languageSelect = document.getElementById('languageSelect');
+            const timezoneInput = document.getElementById('timezoneInput');
+
+            // New Password elements
+            const changePasswordBtn = document.getElementById('changePasswordBtn');
+            const passwordChangeFields = document.getElementById('passwordChangeFields');
+            const currentPasswordInput = document.getElementById('currentPasswordInput');
+            const newPasswordInput = document.getElementById('newPasswordInput');
+            const confirmNewPasswordInput = document.getElementById('confirmNewPasswordInput');
+            const savePasswordBtn = document.getElementById('savePasswordBtn');
+            const cancelPasswordBtn = document.getElementById('cancelPasswordBtn');
+
+            // Bank Account elements
+            const bankNameDisplay = document.getElementById('bankNameDisplay');
+            const bankNameInput = document.getElementById('bankNameInput');
+            const accountNumberDisplay = document.getElementById('accountNumberDisplay');
+            const accountNumberInput = document.getElementById('accountNumberInput');
+            const accountNameDisplay = document.getElementById('accountNameDisplay');
+            const accountNameInput = document.getElementById('accountNameInput');
+
+            const bankFields = [
+                { display: bankNameDisplay, input: bankNameInput },
+                { display: accountNumberDisplay, input: accountNumberInput },
+                { display: accountNameDisplay, input: accountNameInput }
+            ];
+
+            let isEditingSettings = false;
+            let isChangingPassword = false;
+
+            // Function to toggle edit mode for settings
+            function toggleEditSettingsMode() {
+                isEditingSettings = !isEditingSettings;
+
+                if (isEditingSettings) {
+                    editSettingsBtn.textContent = 'Cancel Edit';
+                    saveSettingsBtn.classList.remove('hidden');
+                    emailNotificationsToggle.disabled = false;
+                    darkModeToggle.disabled = false;
+                    languageSelect.disabled = false;
+                    timezoneInput.removeAttribute('readonly');
+
+                    // Make bank account inputs editable
+                    bankFields.forEach(field => {
+                        field.display.classList.add('hidden');
+                        field.input.classList.remove('hidden');
+                        field.input.removeAttribute('readonly');
+                    });
+
+                } else {
+                    editSettingsBtn.textContent = 'Edit Settings';
+                    saveSettingsBtn.classList.add('hidden');
+                    emailNotificationsToggle.disabled = true;
+                    darkModeToggle.disabled = true;
+                    languageSelect.disabled = true;
+                    timezoneInput.setAttribute('readonly', true);
+
+                    // Make bank account inputs read-only and show display spans
+                    bankFields.forEach(field => {
+                        field.display.textContent = field.input.value || "Not Set"; // Update display on cancel if values were changed
+                        field.display.classList.remove('hidden');
+                        field.input.classList.add('hidden');
+                        field.input.setAttribute('readonly', true);
+                    });
+
+                    // If password change was active, hide it on cancel
+                    if (isChangingPassword) {
+                        togglePasswordChangeMode();
+                    }
+                }
+            }
+
+            // Function to save settings changes
+            function saveSettingsChanges() {
+                // In a real application, you would send these values to a backend
+                console.log("Settings saved (frontend only):");
+                console.log("Email Notifications:", emailNotificationsToggle.checked);
+                console.log("Dark Mode:", darkModeToggle.checked);
+                console.log("Preferred Language:", languageSelect.value);
+                console.log("Timezone:", timezoneInput.value);
+
+                // Save bank account details
+                bankFields.forEach(field => {
+                    field.display.textContent = field.input.value || "Not Set";
+                });
+                console.log("Bank Name:", bankNameInput.value);
+                console.log("Account Number:", accountNumberInput.value);
+                console.log("Account Name:", accountNameInput.value);
+
+
+                toggleEditSettingsMode(); // Exit edit mode after saving
+            }
+
+            // Function to toggle password change input fields
+            function togglePasswordChangeMode() {
+                isChangingPassword = !isChangingPassword;
+
+                if (isChangingPassword) {
+                    passwordChangeFields.classList.add('active');
+                    currentPasswordInput.disabled = false;
+                    newPasswordInput.disabled = false;
+                    confirmNewPasswordInput.disabled = false;
+                    changePasswordBtn.classList.add('hidden'); // Hide "Change Password" button
+                } else {
+                    passwordChangeFields.classList.remove('active');
+                    currentPasswordInput.disabled = true;
+                    newPasswordInput.disabled = true;
+                    confirmNewPasswordInput.disabled = true;
+                    changePasswordBtn.classList.remove('hidden'); // Show "Change Password" button
+
+                    // Clear password fields on cancel/save
+                    currentPasswordInput.value = '';
+                    newPasswordInput.value = '';
+                    confirmNewPasswordInput.value = '';
+                }
+            }
+
+            // Function to save new password
+            function saveNewPassword() {
+                const currentPass = currentPasswordInput.value;
+                const newPass = newPasswordInput.value;
+                const confirmNewPass = confirmNewPasswordInput.value;
+
+                if (!currentPass || !newPass || !confirmNewPass) {
+                    // Using a custom message box instead of alert()
+                    displayMessageBox('Please fill in all password fields.', 'error');
+                    return;
+                }
+                if (newPass !== confirmNewPass) {
+                    displayMessageBox('New password and confirm new password do not match.', 'error');
+                    return;
+                }
+                // In a real application, you would send these to the backend for verification and update
+                console.log('Password change initiated:');
+                console.log('Current Password:', currentPass);
+                console.log('New Password:', newPass);
+                displayMessageBox('Password change request sent (frontend only).', 'success');
+
+                togglePasswordChangeMode(); // Hide fields after "saving"
+            }
+
+            // Event Listeners for Settings
+            editSettingsBtn.addEventListener('click', toggleEditSettingsMode);
+            saveSettingsBtn.addEventListener('click', saveSettingsChanges);
+            changePasswordBtn.addEventListener('click', togglePasswordChangeMode);
+            savePasswordBtn.addEventListener('click', saveNewPassword);
+            cancelPasswordBtn.addEventListener('click', togglePasswordChangeMode); // Cancel hides the fields
+
+            // --- Custom Message Box (Replaces alert()) ---
+            function displayMessageBox(message, type = 'info') {
+                let messageBox = document.getElementById('messageBox');
+                let messageText = document.getElementById('messageText');
+
+                if (!messageBox) {
+                    // Create message box if it doesn't exist
+                    messageBox = document.createElement('div');
+                    messageBox.id = 'messageBox';
+                    messageBox.className = 'fixed bottom-4 right-4 p-4 rounded-lg shadow-lg hidden z-50 flex items-center justify-between';
+                    messageBox.innerHTML = `
+                        <span id="messageText"></span>
+                        <button class="ml-4 text-gray-400 hover:text-white" onclick="document.getElementById('messageBox').classList.add('hidden')">&times;</button>
+                    `;
+                    document.body.appendChild(messageBox);
+                    messageText = document.getElementById('messageText');
+                }
+
+                messageText.textContent = message;
+                messageBox.classList.remove('hidden', 'bg-red-600', 'bg-green-600', 'bg-blue-600'); // Clear previous styles
+                messageBox.classList.add('block'); // Make visible
+
+                if (type === 'error') {
+                    messageBox.classList.add('bg-red-600');
+                } else if (type === 'success') {
+                    messageBox.classList.add('bg-green-600');
+                } else {
+                    messageBox.classList.add('bg-gray-800'); // Default info color
+                }
+
+                // Automatically hide after 3 seconds
+                setTimeout(() => {
+                    messageBox.classList.add('hidden');
+                }, 3000);
+            }
+        });
+    </script>
+    <div id="messageBox" class="fixed bottom-4 right-4 bg-gray-800 text-white p-4 rounded-lg shadow-lg hidden z-50 flex items-center justify-between">
+        <span id="messageText"></span>
+        <button class="ml-4 text-gray-400 hover:text-white" onclick="document.getElementById('messageBox').classList.add('hidden')">&times;</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofe Group - Building Future Africa Through Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light blue-gray background */
+        }
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Using a professional placeholder image for demonstration */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        .hero-bg::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(30, 58, 138, 0.7), rgba(249, 115, 22, 0.5)); /* Dark blue to orange gradient overlay */
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Custom colors */
+        .bg-sofe-blue { background-color: #1e3a8a; } /* Darker blue */
+        .text-sofe-blue { color: #1e3a8a; }
+        .bg-sofe-orange { background-color: #f97316; } /* Vibrant orange */
+        .text-sofe-orange { color: #f97316; }
+        .border-sofe-blue { border-color: #1e3a8a; }
+        .hover\:bg-sofe-orange-dark:hover { background-color: #ea580c; } /* Darker orange on hover */
+        .hover\:bg-sofe-blue-dark:hover { background-color: #172554; } /* Darker blue on hover */
+
+        /* Form specific styles */
+        .form-card {
+            background-color: #ffffff;
+            border-radius: 1rem; /* Rounded corners */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Deeper shadow */
+            padding: 2.5rem; /* p-10 */
+        }
+        .input-field {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #4a5568; /* gray-700 */
+            background-color: #f0f4f8; /* A very light blue-gray for inputs */
+            background-clip: padding-box;
+            border: 1px solid #cbd5e0; /* border-gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .input-field:focus {
+            border-color: #f97316; /* sofe-orange on focus */
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.3); /* Ring on focus */
+            outline: none;
+        }
+        textarea.input-field {
+            min-height: 120px;
+        }
+
+        /* Star Rating */
+        .star-rating {
+            direction: rtl; /* For right-to-left star display */
+        }
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+        .star-rating label {
+            font-size: 2.5rem; /* Larger stars */
+            color: #cbd5e0; /* Gray for unselected stars */
+            cursor: pointer;
+            padding: 0 0.2rem;
+            transition: color 0.2s ease-in-out;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #f97316; /* Orange on hover */
+        }
+        .star-rating input[type="radio"]:checked ~ label {
+            color: #f97316; /* Orange for selected stars and previous ones */
+        }
+
+        /* Flash Messages */
+        .flash-message {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .flash-message.success {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+            border: 1px solid #34d399; /* green-400 */
+        }
+        .flash-message.error {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+            border: 1px solid #f87171; /* red-400 */
+        }
+        .flash-message.info {
+            background-color: #e0f2fe; /* blue-100 */
+            color: #1e40af; /* blue-800 */
+            border: 1px solid #60a5fa; /* blue-400 */
+        }
+
+        /* Testimonial item (keeping original structure for dynamic display) */
+        .testimonial-item {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2.5rem; /* Equivalent to p-10 */
+        }
+        .testimonial-item.active {
+            opacity: 1;
+            position: relative; /* Active item takes up space */
+        }
+        .testimonial-container {
+            position: relative;
+            min-height: 350px; /* Ensure enough height for content */
+            overflow: hidden;
+        }
+        .testimonial-nav-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .testimonial-nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md py-4 px-6 md:px-12 fixed w-full z-50">
+        <nav class="container mx-auto flex justify-between items-center flex-wrap">
+            <div class="flex items-center flex-shrink-0 text-sofe-blue mr-6">
+                <span class="font-extrabold text-3xl tracking-tight">Sofe Group</span>
+            </div>
+            <div class="block lg:hidden">
+                <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-sofe-blue border-sofe-blue hover:text-sofe-orange hover:border-sofe-orange">
+                    <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                </button>
+            </div>
+            <div id="nav-content" class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-4 lg:mt-0">
+                <div class="text-lg lg:flex-grow" style="text-align: center;">
+                    <a href="#home" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Home</a>
+                    <a href="#services" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Services</a>
+                    <a href="consult.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Consult</a>
+                    <a href="event.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Events</a>
+                    <a href="#about-us" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">About Us</a>
+                </div>
+                <div>
+                    {% if session.get('user_id') %}
+                        <span class="inline-block text-lg px-6 py-3 leading-none rounded-full text-sofe-blue bg-gray-100 mt-4 lg:mt-0 shadow-lg mr-4">Welcome, {{ session.get('name', '').split(' ')[0] }}</span>
+                        <a href="{{ url_for('dashboard') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-blue hover:bg-sofe-blue-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Dashboard</a>
+                        <a href="{{ url_for('logout') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg ml-4">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('signup') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Login/Sign up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="min-h-screen pt-24 pb-12 hero-bg flex items-center justify-center">
+        <div class="container mx-auto px-6 hero-content">
+            <div class="text-center mb-12 text-white drop-shadow-lg">
+                <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-4">Share Your Sofe Group Experience</h1>
+                <p class="text-xl md:text-2xl max-w-3xl mx-auto">
+                    Your feedback helps us grow and inspires others. We'd love to hear about your journey with us!
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto form-card">
+                {# Flash Messages #}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="mb-6">
+                            {% for category, message in messages %}
+                                <div class="flash-message {{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('testimonial') }}" method="POST" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-lg font-medium text-gray-700 mb-2">Your Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="John Doe"
+                               class="input-field"
+                               value="{{ name or (session.get('name', '') if session.get('user_id') else '') }}" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-lg font-medium text-gray-700 mb-2">Your Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="john.doe@example.com"
+                               class="input-field"
+                               value="{{ email or (session.get('email', '') if session.get('user_id') else '') }}" required>
+                    </div>
+                    <div>
+                        <label for="service_used" class="block text-lg font-medium text-gray-700 mb-2">Which service did you use?</label>
+                        <select id="service_used" name="service_used" class="input-field" required>
+                            <option value="">Select a service...</option>
+                            <option value="blockchain_hub" {% if service_used == 'blockchain_hub' %}selected{% endif %}>Sofe Blockchain Hub</option>
+                            <option value="media" {% if service_used == 'media' %}selected{% endif %}>Sofe Media</option>
+                            <option value="academy" {% if service_used == 'academy' %}selected{% endif %}>Sofe Academy (Corporate Training)</option>
+                            <option value="custom_solution" {% if service_used == 'custom_solution' %}selected{% endif %}>Custom Tech Solution</option>
+                            <option value="consultation" {% if service_used == 'consultation' %}selected{% endif %}>Consultation Service</option>
+                            <option value="other" {% if service_used == 'other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-lg font-medium text-gray-700 mb-2">Your Rating</label>
+                        <div class="flex flex-row-reverse justify-end star-rating">
+                            <input type="radio" id="star5" name="rating" value="5" {% if rating == 5 %}checked{% endif %} class="hidden" /><label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star4" name="rating" value="4" {% if rating == 4 %}checked{% endif %} class="hidden" /><label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star3" name="rating" value="3" {% if rating == 3 %}checked{% endif %} class="hidden" /><label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star2" name="rating" value="2" {% if rating == 2 %}checked{% endif %} class="hidden" /><label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star1" name="rating" value="1" {% if rating == 1 %}checked{% endif %} class="hidden" /><label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="testimonial_message" class="block text-lg font-medium text-gray-700 mb-2">Your Testimonial</label>
+                        <textarea id="testimonial_message" name="testimonial_message" rows="8" placeholder="Tell us about your experience with Sofe Group..."
+                                  class="input-field resize-y" required>{{ testimonial_message or '' }}</textarea>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="consent" name="consent" value="true" class="h-5 w-5 text-sofe-blue rounded focus:ring-sofe-blue" {% if consent == 'true' %}checked{% endif %}>
+                        <label for="consent" class="ml-2 block text-base text-gray-700">
+                            I agree to allow Sofe Group to display my testimonial on their website or marketing materials.
+                        </label>
+                    </div>
+                    <div class="text-center pt-4">
+                        <button type="submit" class="bg-sofe-orange hover:bg-sofe-orange-dark text-white font-bold py-3.5 px-10 rounded-full text-xl shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                            Submit Testimonial
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-sofe-blue text-white py-10 px-6">
+        <div class="container mx-auto text-center">
+            <p class="text-lg mb-4">&copy; 2025 Sofe Group. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Privacy Policy</a>
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out">Terms of Service</a>
+                <a href="{{ url_for('contact') }}" class="hover:text-sofe-orange transition duration-300 ease-in-out">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile navigation toggle
+        document.getElementById('nav-toggle').onclick = function () {
+            document.getElementById('nav-content').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

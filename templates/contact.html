@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofe Group - Building Future Africa Through Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light blue-gray background */
+            color: #333;
+        }
+        .hero-bg {
+            background-image: url('../static/avatar-1.webp'); /* Ensure this path is correct */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        /* Custom colors for better control */
+        .bg-sofe-blue { background-color: #1e3a8a; } /* Darker blue */
+        .text-sofe-blue { color: #1e3a8a; }
+        .border-sofe-blue { border-color: #1e3a8a; }
+        .focus\:border-sofe-blue:focus { border-color: #1e3a8a; }
+        .focus\:ring-sofe-blue:focus { box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.2); }
+
+        .bg-sofe-orange { background-color: #f97316; } /* Vibrant orange */
+        .text-sofe-orange { color: #f97316; }
+        .hover\:bg-sofe-orange-dark:hover { background-color: #ea580c; } /* Darker orange on hover */
+        .hover\:bg-sofe-blue-dark:hover { background-color: #172554; } /* Darker blue on hover */
+
+        /* Enhanced Form Specific Styles (from previous contact page) */
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 1.25rem; /* More rounded */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05); /* Stronger shadow */
+            padding: 3rem; /* More padding */
+            border: 1px solid #e2e8f0;
+            max-width: 800px; /* Slightly wider form */
+            margin: 4rem auto;
+        }
+        .form-group {
+            margin-bottom: 1.75rem; /* More space between groups */
+        }
+        .form-group label {
+            display: block;
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* Semi-bold */
+            color: #2d3748; /* text-gray-800 */
+            margin-bottom: 0.625rem; /* Slightly more margin */
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1.25rem; /* py-3 px-5 */
+            border: 1px solid #cbd5e0; /* border-gray-400 */
+            border-radius: 0.625rem; /* More rounded input fields */
+            font-size: 1.05rem; /* Slightly larger font */
+            color: #2d3748; /* text-gray-800 */
+            background-color: #fcfcfc; /* Slightly off-white background for inputs */
+            transition: all 0.3s ease-in-out;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1e3a8a; /* sofe-blue */
+            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.25); /* Stronger focus shadow */
+            background-color: #ffffff;
+        }
+        .form-group textarea {
+            min-height: 150px; /* Taller textarea */
+            resize: vertical;
+        }
+        button[type="submit"] {
+            display: inline-block;
+            background-color: #f97316;
+            color: #ffffff;
+            font-weight: 700; /* Bold */
+            padding: 1rem 3rem; /* py-4 px-12 */
+            border-radius: 9999px; /* rounded-full */
+            text-align: center;
+            transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Stronger initial shadow */
+            transform: scale(1);
+        }
+        button[type="submit"]:hover {
+            background-color: #ea580c;
+            transform: scale(1.03); /* Slightly more pronounced scale */
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15), 0 6px 8px -3px rgba(0, 0, 0, 0.08); /* More pronounced shadow on hover */
+        }
+
+        /* Flash message styles (from previous contact page) */
+        .flash-message {
+            padding: 1rem 1.5rem; /* More padding */
+            margin-bottom: 1.5rem; /* More margin */
+            border: 1px solid transparent;
+            border-radius: 0.5rem; /* More rounded */
+            font-weight: 600; /* Semi-bold */
+            display: flex;
+            align-items: center;
+            gap: 0.75rem; /* Space between icon and text */
+        }
+        .flash-message i {
+            font-size: 1.5rem;
+        }
+        .flash-message.success {
+            color: #0f5132;
+            background-color: #d1e7dd;
+            border-color: #badbcc;
+        }
+        .flash-message.danger {
+            color: #842029;
+            background-color: #f8d7da;
+            border-color: #f5c2c7;
+        }
+        .flash-message.warning {
+            color: #664d03;
+            background-color: #fff3cd;
+            border-color: #ffecb5;
+        }
+        .flash-message.info {
+            color: #055160;
+            background-color: #cff4fc;
+            border-color: #b6effb;
+        }
+
+        /* Custom styles for testimonial animation */
+        .testimonial-item {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2.5rem; /* Equivalent to p-10 */
+        }
+        .testimonial-item.active {
+            opacity: 1;
+            position: relative; /* Active item takes up space */
+        }
+        .testimonial-container {
+            position: relative;
+            min-height: 350px; /* Ensure enough height for content */
+            overflow: hidden;
+        }
+        .testimonial-nav-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .testimonial-nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md py-4 px-6 md:px-12 fixed w-full z-50">
+        <nav class="container mx-auto flex justify-between items-center flex-wrap">
+            <div class="flex items-center flex-shrink-0 text-sofe-blue mr-6">
+                <span class="font-extrabold text-3xl tracking-tight">Sofe Group</span>
+            </div>
+            <div class="block lg:hidden">
+                <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-sofe-blue border-sofe-blue hover:text-sofe-orange hover:border-sofe-orange">
+                    <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+                </button>
+            </div>
+            <div id="nav-content" class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-4 lg:mt-0">
+                <div class="text-lg lg:flex-grow" style="text-align: center;">
+                    <a href="#home" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Home</a>
+                    <a href="#services" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Services</a>
+                    <a href="consult.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Consult</a>
+                    <a href="event.html" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">Events</a>
+                    <a href="#about-us" class="block mt-4 lg:inline-block lg:mt-0 text-gray-700 hover:text-sofe-orange mr-6 transition duration-300 ease-in-out">About Us</a>
+                </div>
+                <div>
+                    {% if session.get('user_id') %}
+                        <span class="inline-block text-lg px-6 py-3 leading-none rounded-full text-sofe-blue bg-gray-100 mt-4 lg:mt-0 shadow-lg mr-4">Welcome, {{ session.get('name', '').split(' ')[0] }}</span>
+                        <a href="{{ url_for('dashboard') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-blue hover:bg-sofe-blue-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Dashboard</a>
+                        <a href="{{ url_for('logout') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg ml-4">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('signup') }}" class="inline-block text-lg px-6 py-3 leading-none border rounded-full text-white bg-sofe-orange hover:bg-sofe-orange-dark transition duration-300 ease-in-out mt-4 lg:mt-0 shadow-lg">Login/Sign up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero-bg relative flex items-center justify-center min-h-screen pt-24 pb-12 md:py-32 text-center text-white overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-60"></div> <div class="relative z-10 px-4 max-w-5xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6 animate-fade-in-up">
+                Building a Future Africa Through <span class="text-sofe-orange">Innovation & Technology</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-10 opacity-0 animate-fade-in-up" style="animation-delay: 0.5s;">
+                Empowering businesses and individuals with cutting-edge tech solutions and strategic guidance for sustainable growth.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 opacity-0 animate-fade-in-up" style="animation-delay: 1s;">
+               
+                <a href="#contact" class="bg-white hover:bg-gray-100 text-sofe-blue font-bold py-4 px-10 rounded-full text-lg shadow-xl transform hover:scale-105 transition duration-300 ease-in-out border border-sofe-blue">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-16 md:py-24 bg-gray-50">
+        <div class="form-container">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-sofe-blue text-center mb-6">Get In Touch</h2>
+            <p class="text-xl text-gray-700 text-center mb-12 max-w-2xl mx-auto leading-relaxed">
+                Have questions or want to discuss a project? We're here to help! Fill out the form below, and we'll get back to you promptly.
+            </p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="mb-8">
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">
+                                {% if category == 'success' %}<i class="fas fa-check-circle"></i>
+                                {% elif category == 'danger' %}<i class="fas fa-exclamation-circle"></i>
+                                {% elif category == 'warning' %}<i class="fas fa-exclamation-triangle"></i>
+                                {% elif category == 'info' %}<i class="fas fa-info-circle"></i>
+                                {% endif %}
+                                <span>{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('contact') }}" method="POST">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                    <div class="form-group">
+                        <label for="name">Your Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="John Doe" value="{{ name or '' }}" required readonly class="block">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="john.doe@example.com" value="{{ email or '' }}" required class="block" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number (Optional)</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+1 (XXX) XXX-XXXX" value="{{ phone or '' }}" class="block">
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject of Inquiry</label>
+                    <select id="subject" name="subject" required class="block">
+                        <option value="">Choose a subject...</option>
+                        <option value="sales" {% if subject == 'sales' %}selected{% endif %}>Sales & Product Inquiry</option>
+                        <option value="support" {% if subject == 'support' %}selected{% endif %}>Technical Support</option>
+                        <option value="partnership" {% if subject == 'partnership' %}selected{% endif %}>Partnership & Collaboration</option>
+                        <option value="feedback" {% if subject == 'feedback' %}selected{% endif %}>General Feedback</option>
+                        <option value="other" {% if subject == 'other' %}selected{% endif %}>Other Inquiry</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" placeholder="Please provide details about your request or question..." required class="block">{{ message or '' }}</textarea>
+                </div>
+                <div class="text-center mt-8">
+                    <button type="submit">Send Your Message</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-sofe-blue text-white py-12 px-6 mt-16">
+        <div class="container mx-auto text-center">
+            <p class="text-lg mb-6">&copy; 2025 Sofe Group. All rights reserved.</p>
+            <div class="flex flex-col md:flex-row justify-center space-y-3 md:space-y-0 md:space-x-8 text-lg">
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out font-medium">Privacy Policy</a>
+                <a href="#" class="hover:text-sofe-orange transition duration-300 ease-in-out font-medium">Terms of Service</a>
+                <a href="#contact" class="hover:text-sofe-orange transition duration-300 ease-in-out font-medium">Contact</a>
+            </div>
+            <div class="mt-8 text-2xl space-x-6">
+                <a href="#" class="text-white hover:text-sofe-orange transition duration-300 ease-in-out"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-white hover:text-sofe-orange transition duration-300 ease-in-out"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-white hover:text-sofe-orange transition duration-300 ease-in-out"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="text-white hover:text-sofe-orange transition duration-300 ease-in-out"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile navigation toggle
+        document.getElementById('nav-toggle').onclick = function () {
+            document.getElementById('nav-content').classList.toggle('hidden');
+        }
+
+        // Testimonial Slider functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const testimonials = document.querySelectorAll('.testimonial-item');
+            let currentIndex = 0;
+
+            function showTestimonial(index) {
+                testimonials.forEach((testimonial, i) => {
+                    testimonial.classList.remove('active');
+                    if (i === index) {
+                        testimonial.classList.add('active');
+                    }
+                });
+            }
+
+            function nextTestimonial() {
+                currentIndex = (currentIndex + 1) % testimonials.length;
+                showTestimonial(currentIndex);
+            }
+
+            function prevTestimonial() {
+                currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+                showTestimonial(currentIndex);
+            }
+
+            // Initial display
+            showTestimonial(currentIndex);
+
+            // Add event listeners for navigation buttons
+            const prevButton = document.getElementById('prev-testimonial');
+            const nextButton = document.getElementById('next-testimonial');
+
+            if (prevButton) {
+                prevButton.addEventListener('click', prevTestimonial);
+            }
+            if (nextButton) {
+                nextButton.addEventListener('click', nextTestimonial);
+            }
+
+            // Optional: Auto-advance testimonials
+            setInterval(nextTestimonial, 7000); // Change testimonial every 7 seconds
+        });
+
+        // Simple Intersection Observer for animations (optional, but good for perceived performance)
+        const animateOnScroll = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in-up-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(animateOnScroll, {
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        });
+
+        document.querySelectorAll('.animate-fade-in-up').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Add CSS for the animation keyframes
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeInFromBottom {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .animate-fade-in-up {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            .animate-fade-in-up-visible {
+                animation: fadeInFromBottom 1s ease-out forwards;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+   

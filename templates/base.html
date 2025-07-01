@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title | default('SOFE Group') }}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            @apply bg-gray-100 text-gray-800;
+        }
+        .flash-message {
+            @apply p-3 mb-4 rounded-md text-sm font-medium;
+        }
+        .flash-success { @apply bg-green-100 text-green-700; }
+        .flash-danger { @apply bg-red-100 text-red-700; }
+        .flash-warning { @apply bg-yellow-100 text-yellow-700; }
+        .flash-info { @apply bg-blue-100 text-blue-700; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="bg-gray-800 text-white p-4 shadow-md">
+        <nav class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('home') }}" class="text-2xl font-bold rounded-md px-2 py-1 hover:bg-gray-700">SOFE Group</a>
+            <div class="space-x-4">
+                <a href="{{ url_for('home') }}" class="hover:text-gray-300">Home</a>
+                <a href="{{ url_for('about') }}" class="hover:text-gray-300">About</a>
+                <a href="{{ url_for('gallery') }}" class="hover:text-gray-300">Gallery</a>
+                <a href="{{ url_for('hire') }}" class="hover:text-gray-300">Hire Us</a>
+                <a href="{{ url_for('contact') }}" class="hover:text-gray-300">Contact</a>
+                <a href="{{ url_for('courses') }}" class="hover:text-gray-300">Courses</a>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.is_admin %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="hover:text-gray-300">Admin Dashboard</a>
+                    {% elif current_user.is_partner %}
+                        <a href="{{ url_for('partner_dashboard') }}" class="hover:text-gray-300">Partner Dashboard</a>
+                    {% else %}
+                        <a href="{{ url_for('dashboard') }}" class="hover:text-gray-300">Dashboard</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="hover:text-gray-300 bg-red-600 px-3 py-1 rounded-md">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="hover:text-gray-300">Login</a>
+                    <a href="{{ url_for('signup') }}" class="hover:text-gray-300">Sign Up</a>
+                    <a href="{{ url_for('partner_login') }}" class="hover:text-gray-300">Partner Login</a>
+                    <a href="{{ url_for('partner_signup') }}" class="hover:text-gray-300 bg-indigo-600 px-3 py-1 rounded-md">Partner Sign Up</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto mt-8 p-4 flex-grow">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="max-w-3xl mx-auto mb-6">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center mt-8 shadow-inner">
+        <p>&copy; {{ datetime.now().year }} SOFE Group. All rights reserved.</p>
+    </footer>
+</body>
+</html>

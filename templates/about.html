@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Sofe Group</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f3f4f6; /* Light gray for body */
+            color: #1f2937; /* Dark gray for text */
+        }
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #111827; /* Darker gray for dark mode body */
+                color: #e5e7eb; /* Lighter gray for dark mode text */
+            }
+        }
+
+        /* Section Titles and Subtitles */
+        .section-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            text-align: center;
+            color: #1d4ed8; /* blue-700 */
+            margin-bottom: 2rem; /* mb-8 */
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-color: #6d28d9; /* purple-600 */
+            border-radius: 2px;
+        }
+        .section-title.blue::after {
+            background-color: #2563eb; /* blue-600 */
+        }
+        .section-title.purple::after {
+            background-color: #7c3aed; /* purple-600 */
+        }
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 2.5rem; /* md:text-5xl */
+            }
+        }
+        @media (prefers-color-scheme: dark) {
+            .section-title {
+                color: #60a5fa; /* blue-500 */
+            }
+            .section-title.blue {
+                color: #60a5fa; /* blue-400 */
+            }
+            .section-title.purple {
+                color: #a78bfa; /* purple-400 */
+            }
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem; /* text-lg */
+            line-height: 1.75; /* leading-relaxed */
+            text-align: center;
+            max-width: 48rem; /* max-w-4xl */
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 3rem; /* mb-12 */
+            color: #374151; /* gray-700 */
+        }
+        @media (min-width: 768px) {
+            .section-subtitle {
+                font-size: 1.25rem; /* md:text-xl */
+            }
+        }
+        @media (prefers-color-scheme: dark) {
+            .section-subtitle {
+                color: #d1d5db; /* gray-300 */
+            }
+        }
+        .section-subtitle.no-margin {
+            margin-bottom: 0;
+        }
+
+        /* Card styles */
+        .card {
+            background-color: #ffffff; /* bg-white */
+            border-radius: 1rem; /* rounded-xl */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        @media (prefers-color-scheme: dark) {
+            .card {
+                background-color: #1f2937; /* gray-800 */
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+            }
+            .card:hover {
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        .card-body {
+            padding: 1.5rem; /* p-6 */
+        }
+        @media (min-width: 768px) {
+            .card-body {
+                padding: 2rem; /* md:p-8 */
+            }
+        }
+
+        /* Buttons */
+        .btn {
+            font-weight: 600; /* font-semibold */
+            padding: 0.75rem 2rem; /* py-3 px-8 */
+            border-radius: 9999px; /* rounded-full */
+            transition: all 0.3s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #2563eb; /* blue-600 */
+            color: #ffffff; /* text-white */
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8; /* blue-700 */
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
+        }
+        @media (prefers-color-scheme: dark) {
+            .btn-primary {
+                background-color: #1d4ed8; /* blue-700 */
+            }
+            .btn-primary:hover {
+                background-color: #1e40af; /* blue-800 */
+            }
+        }
+
+        .btn-secondary {
+            background-color: #6d28d9; /* purple-600 */
+            color: #ffffff; /* text-white */
+        }
+        .btn-secondary:hover {
+            background-color: #5b21b6; /* purple-700 */
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(109, 40, 217, 0.3);
+        }
+        @media (prefers-color-scheme: dark) {
+            .btn-secondary {
+                background-color: #5b21b6; /* purple-700 */
+            }
+            .btn-secondary:hover {
+                background-color: #4c1d95; /* purple-800 */
+            }
+        }
+
+        /* Links */
+        .link {
+            color: #2563eb; /* blue-600 */
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
+        .link:hover {
+            text-decoration: underline;
+            color: #1d4ed8; /* blue-700 */
+        }
+        @media (prefers-color-scheme: dark) {
+            .link {
+                color: #60a5fa; /* blue-400 */
+            }
+            .link:hover {
+                color: #3b82f6; /* blue-500 */
+            }
+        }
+
+        /* Utility classes for consistency */
+        .bg-section-alt {
+            background-color: #f9fafb; /* gray-50 */
+        }
+        @media (prefers-color-scheme: dark) {
+            .bg-section-alt {
+                background-color: #1f2937; /* gray-850, slightly darker than gray-800 */
+            }
+        }
+        /* Add to your CSS */
+@keyframes float {
+    0% { transform: translate(0, 0px); }
+    50% { transform: translate(0, 5px); }
+    100% { transform: translate(0, 0px); }
+}
+
+.movable-section.floating {
+    animation: float 3s ease-in-out infinite; /* Apply the floating animation */
+}
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-16 md:py-24">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 leading-tight drop-shadow-md">About Sofe Group</h1>
+            <p class="text-lg sm:text-xl md:text-2xl font-light max-w-3xl mx-auto opacity-90">
+                Driving Digital Education and Blockchain Adoption Across Africa.
+            </p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 md:py-16 max-w-7xl">
+
+        <section class="py-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="section-title blue">Our Mission</h2>
+                    <p class="section-subtitle no-margin">
+                        To build Africa’s future by equipping individuals with the knowledge and resources needed to thrive in the evolving tech landscape, focusing on digital education, blockchain adoption, and tech literacy.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 bg-section-alt rounded-lg">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title">Our Impact</h2>
+                <ul class="section-subtitle !text-left list-disc list-inside">
+                    <li><span class="font-semibold">Empowered Over 5,000 Individuals:</span> Trained in essential Web3 and digital skills through virtual and in-person learning.</li>
+                    <li><span class="font-semibold">Developed Tech Professionals:</span> Mentored thousands in blockchain, cryptocurrency, and emerging technologies, now contributing to the ecosystem.</li>
+                    <li><span class="font-semibold">High-Impact Initiatives:</span> Organized bootcamps, training programs, and community-building efforts.</li>
+                    <li><span class="font-semibold">Strategic Partnerships:</span> Collaborated with leading blockchain firms for free and accessible educational resources.</li>
+                    <li><span class="font-semibold">Broad Reach:</span> Engaging universities, institutions, and tech communities across Africa.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title purple">Our Approach</h2>
+                <ul class="section-subtitle !text-left list-disc list-inside">
+                    <li><span class="font-semibold">Education as Key:</span> Structured and practical training in blockchain and digital skills.</li>
+                    <li><span class="font-semibold">Community Engagement:</span> Hosting physical meetups, IRL events, and hackathons.</li>
+                    <li><span class="font-semibold">Recognized Learning:</span> Certificates upon completion for career and professional development.</li>
+                    <li><span class="font-semibold">Career Advancement:</span> Providing mentorship and career support.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="py-12 bg-section-alt rounded-lg">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title">Our Recent Initiatives</h2>
+                <ul class="section-subtitle !text-left list-disc list-inside">
+                    <li><span class="font-semibold">Blockchain Career Expo:</span> Scaling Africa’s tech manpower by connecting talent and stakeholders.</li>
+                    <li><span class="font-semibold">Web3 Developer Bootcamps:</span> Intensive training in Solidity, Rust, and blockchain development.</li>
+                    <li><span class="font-semibold">University Partnerships:</span> Introducing blockchain education across Nigerian and African universities.</li>
+                    <li><span class="font-semibold">Community-Led Learning:</span> Dedicated groups for DeFi, trading, and blockchain development.</li>
+                    <li><span class="font-semibold">Industry Partnerships:</span> Collaborating for learning and job placements.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="section-title blue">Why We Do This</h2>
+                    <p class="section-subtitle no-margin">
+                        Driven by the vision of a digitally empowered Africa, leveraging technology for financial inclusion and economic growth. We believe in bridging the digital divide through education, mentorship, and collaboration.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 bg-section-alt rounded-lg">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title">Our Past Events</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 section-subtitle !text-left !mb-0">
+                    <div>
+                        <p><i class="fas fa-link mr-2 text-blue-500"></i> <a href="https://x.com/real3verse/status/1793620396610089185?s=46" target="_blank" class="link">Thriving in a Failing Economy With 3.0 Verse</a></p>
+                        <p><i class="fas fa-link mr-2 text-blue-500"></i> <a href="https://x.com/sofegroup/status/1642105480448204805" target="_blank" class="link">Blockchain Career Expo 2023 (Virtual)</a></p>
+                    </div>
+                    <div>
+                        <p><i class="fas fa-link mr-2 text-blue-500"></i> <a href="https://x.com/CoinW_Africa/status/1676801315874152449" target="_blank" class="link">UNN Campus Invasion</a></p>
+                        <p><i class="fas fa-link mr-2 text-blue-500"></i> <a href="https://web.facebook.com/share/p/mgMDWZvwUNMF1cND/" target="_blank" class="link">CoinW Trading & Signal Seminar 2.0</a></p>
+                    </div>
+                </div>
+                <div class="mt-8 text-center">
+                    <a href="{{ url_for('gallery') }}" target="_blank" class="btn btn-primary">
+                        <i class="fas fa-camera-retro mr-2"></i> Photo Gallery
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 movable-section" id="affiliatePartnersSection">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title purple">Affiliate Partners</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 section-subtitle !mb-0">
+                    <a href="https://x.com/sofegroup/status/1877909683240898623" target="_blank" class="card">
+                        <div class="card-body flex items-center space-x-4">
+                            <img src="https://placehold.co/40x40/FF5733/FFFFFF?text=CX" alt="CoinEx Logo" class="h-10 w-10 rounded-full">
+                            <div><h3 class="text-lg font-semibold">CoinEx</h3></div>
+                        </div>
+                    </a>
+                    <div class="card">
+                        <div class="card-body flex items-center space-x-4">
+                            <img src="https://placehold.co/40x40/33A0FF/FFFFFF?text=CW" alt="CoinW Exchange Logo" class="h-10 w-10 rounded-full">
+                            <div><h3 class="text-lg font-semibold">CoinW Exchange</h3></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body flex items-center space-x-4">
+                            <img src="https://placehold.co/40x40/8A2BE2/FFFFFF?text=3V" alt="3.0 Verse Logo" class="h-10 w-10 rounded-full">
+                            <div><h3 class="text-lg font-semibold">3.0 Verse</h3></div>
+                        </div>
+                    </div>
+                    <a href="https://x.com/sofegroup/status/1853385991882482086" target="_blank" class="card">
+                        <div class="card-body flex items-center space-x-4">
+                            <img src="https://placehold.co/40x40/FFC300/FFFFFF?text=OX" alt="Orangex Exchange Logo" class="h-10 w-10 rounded-full">
+                            <div><h3 class="text-lg font-semibold">Orangex Exchange</h3></div>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+        </section>
+        
+        <script>
+            const movableSection = document.getElementById('affiliatePartnersSection');
+            let isDragging = false;
+            let offsetX, offsetY;
+        
+            movableSection.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - movableSection.getBoundingClientRect().left;
+                offsetY = e.clientY - movableSection.getBoundingClientRect().top;
+                movableSection.style.cursor = 'grabbing';
+            });
+        
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault(); // Prevent text selection while dragging
+                movableSection.style.left = `${e.clientX - offsetX}px`;
+                movableSection.style.top = `${e.clientY - offsetY}px`;
+            });
+        
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                movableSection.style.cursor = 'grab';
+            });
+        </script>
+        <section class="py-12 bg-section-alt rounded-lg">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title">University of Nigeria, Nsukka Community Partnership</h2>
+                <ul class="section-subtitle !text-left list-disc list-inside">
+                    <li><i class="fas fa-university mr-2 text-purple-500"></i> <a href="https://x.com/B_CareerExpo/status/1850189093478535249" target="_blank" class="link">Lion Science Park</a></li>
+                    <li><i class="fas fa-link mr-2 text-purple-500"></i> <a href="https://x.com/sofegroup/status/1846922666533441642" target="_blank" class="link">Sofe Group UNN Initiative</a></li>
+                    <li><i class="fas fa-link mr-2 text-purple-500"></i> <a href="https://x.com/Borderlessunn/status/1857369375474343994" target="_blank" class="link">Borderless UNN</a></li>
+                    <li><i class="fas fa-graduation-cap mr-2 text-purple-500"></i> Faculty of Arts</li>
+                    <li><i class="fas fa-flask mr-2 text-purple-500"></i> National Association of Physical Science Students (NAPPS)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title blue">Acknowledgement from Brand Partners</h2>
+                <ul class="section-subtitle !text-left list-disc list-inside">
+                    <li>CoinW product orientation</li>
+                    <li>Crypto Millionaire Bootcamp 3.0</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="py-12 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-xl">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow-md">Learn More About Us</h2>
+                <p class="text-lg leading-relaxed max-w-3xl mx-auto mb-8 opacity-90">
+                    Connect with us on our social media channels and visit our website for the latest updates and information.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="http://www.sofegroup.com" target="_blank" class="btn btn-secondary"><i class="fas fa-globe mr-2"></i> Website</a>
+                    <a href="http://t.me/sofegroupofficial" target="_blank" class="btn btn-secondary"><i class="fab fa-telegram-plane mr-2"></i> Telegram</a>
+                    <a href="https://x.com/sofegroup" target="_blank" class="btn btn-secondary"><i class="fab fa-twitter mr-2"></i> X (Twitter)</a>
+                    <a href="https://facebook.com/sofegroupofficial" target="_blank" class="btn btn-secondary"><i class="fab fa-facebook-f mr-2"></i> Facebook</a>
+                    <a href="https://www.instagram.com/sofegroup" target="_blank" class="btn btn-secondary"><i class="fab fa-instagram mr-2"></i> Instagram</a>
+                    <a href="https://www.linkedin.com/company/sofe-group/" target="_blank" class="btn btn-secondary"><i class="fab fa-linkedin-in mr-2"></i> LinkedIn</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-300 py-8 text-center mt-12">
+        <div class="container mx-auto px-6">
+            <p>&copy; 2025 Sofe Group. All rights reserved.</p>
+            <p class="text-sm mt-2">
+                <a href="#" class="text-gray-600 dark:text-gray-300 hover:underline">Privacy Policy</a> |
+                <a href="#" class="text-gray-600 dark:text-gray-300 hover:underline">Terms of Service</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

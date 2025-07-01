@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-gray-800 p-4 text-white shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('admin_dashboard') }}" class="text-2xl font-bold rounded-md px-3 py-2 hover:bg-gray-700 transition duration-300">Admin Panel</a>
+            <div class="flex items-center space-x-4">
+                <a href="{{ url_for('admin_dashboard') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md transition duration-300 bg-gray-700">Dashboard</a>
+                <a href="{{ url_for('all_users') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md transition duration-300">Users</a>
+                <a href="{{ url_for('admin_referrers_list') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md transition duration-300">View Referrers</a>
+                <a href="{{ url_for('admin_admins_list') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md transition duration-300">View Admins</a> {# NEW NAV LINK #}
+                <a href="{{ url_for('view_hire_inquiries') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md transition duration-300">Hire Inquiries</a>
+                <a href="{{ url_for('view_contact_inquiries') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md transition duration-300">Contact Inquiries</a>
+                <a href="{{ url_for('view_help_requests') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md transition duration-300">Help Requests</a>
+                <a href="{{ url_for('view_testimonials') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md transition duration-300">Testimonials</a>
+                <a href="{{ url_for('admin_logout') }}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md ml-4 transition duration-300 shadow-md">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-4 space-y-2">
+                    {% for category, message in messages %}
+                        <div class="p-4 rounded-lg shadow-sm {% if category == 'danger' %}bg-red-100 text-red-700{% elif category == 'success' %}bg-green-100 text-green-700{% elif category == 'warning' %}bg-yellow-100 text-yellow-700{% elif category == 'info' %}bg-blue-100 text-blue-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <h1 class="text-4xl font-extrabold mb-8 text-gray-900 text-center">Admin Dashboard Overview</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+            <div class="bg-white p-8 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 ease-in-out border-b-4 border-indigo-500">
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Total Users</h3>
+                <p class="text-5xl font-bold text-indigo-600">{{ total_users }}</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 ease-in-out border-b-4 border-green-500">
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Hire Inquiries</h3>
+                <p class="text-5xl font-bold text-green-600">{{ total_hires }}</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 ease-in-out border-b-4 border-yellow-500">
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Contact Inquiries</h3>
+                <p class="text-5xl font-bold text-yellow-600">{{ total_contacts }}</p>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 ease-in-out border-b-4 border-purple-500">
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Testimonials</h3>
+                <p class="text-5xl font-bold text-purple-600">{{ total_testimonials }}</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Our Partners</h2>
+                {% if partners %}
+                <ul class="divide-y divide-gray-200">
+                    {% for partner in partners %}
+                    <li class="py-4 flex justify-between items-center hover:bg-gray-50 rounded-md px-2 transition duration-200">
+                        <div>
+                            <p class="text-gray-900 font-medium text-lg">{{ partner.company_name or partner.name }}</p>
+                            <p class="text-sm text-gray-600">{{ partner.email }}</p>
+                        </div>
+                        <a href="{{ url_for('view_user', user_id=partner.id) }}" class="text-indigo-600 hover:text-indigo-800 text-base font-semibold transition duration-300">View Details &rarr;</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="text-right mt-6">
+                    <a href="{{ url_for('all_users', filter_partner=True) }}" class="text-blue-600 hover:text-blue-800 font-semibold text-lg transition duration-300">View All Partners &rarr;</a>
+                </div>
+                {% else %}
+                <p class="text-gray-600 text-lg">No partners registered yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Admins</h2>
+                {% if admins %}
+                <ul class="divide-y divide-gray-200">
+                    {% for admin in admins %}
+                    <li class="py-4 flex justify-between items-center hover:bg-gray-50 rounded-md px-2 transition duration-200">
+                        <div>
+                            <p class="text-gray-900 font-medium text-lg">{{ admin.name }}</p>
+                            <p class="text-sm text-gray-600">{{ admin.email }}</p>
+                        </div>
+                        <a href="{{ url_for('view_user', user_id=admin.id) }}" class="text-indigo-600 hover:text-indigo-800 text-base font-semibold transition duration-300">View Details &rarr;</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="text-right mt-6">
+                    <a href="{{ url_for('admin_admins_list') }}" class="text-blue-600 hover:text-blue-800 font-semibold text-lg transition duration-300">View All Admins &rarr;</a>
+                </div>
+                {% else %}
+                <p class="text-gray-600 text-lg">No admins found.</p>
+                {% endif %}
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Users Who Referred Others</h2>
+                {% if referrers %}
+                <ul class="divide-y divide-gray-200">
+                    {% for referrer in referrers %}
+                    <li class="py-4 flex justify-between items-center hover:bg-gray-50 rounded-md px-2 transition duration-200">
+                        <div>
+                            <p class="text-gray-900 font-medium text-lg">{{ referrer.name }}</p>
+                            <p class="text-sm text-gray-600">{{ referrer.email }}</p>
+                            <p class="text-xs text-gray-500">Referred: {{ referrer.referred_users|length }} users</p>
+                        </div>
+                        <a href="{{ url_for('view_user', user_id=referrer.id) }}" class="text-indigo-600 hover:text-indigo-800 text-base font-semibold transition duration-300">View Details &rarr;</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="text-right mt-6">
+                    <a href="{{ url_for('admin_referrers_list') }}" class="text-blue-600 hover:text-blue-800 font-semibold text-lg transition duration-300">View All Referrers &rarr;</a>
+                </div>
+                {% else %}
+                <p class="text-gray-600 text-lg">No users have referred others yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Recent Users</h2>
+                {% if recent_users %}
+                <ul class="divide-y divide-gray-200">
+                    {% for user in recent_users %}
+                    <li class="py-4 flex justify-between items-center hover:bg-gray-50 rounded-md px-2 transition duration-200">
+                        <div>
+                            <p class="text-gray-900 font-medium text-lg">{{ user.name }}</p>
+                            <p class="text-sm text-gray-600">{{ user.email }}</p>
+                        </div>
+                        <a href="{{ url_for('view_user', user_id=user.id) }}" class="text-indigo-600 hover:text-indigo-800 text-base font-semibold transition duration-300">View Details &rarr;</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="text-right mt-6">
+                    <a href="{{ url_for('all_users') }}" class="text-blue-600 hover:text-blue-800 font-semibold text-lg transition duration-300">View All Users &rarr;</a>
+                </div>
+                {% else %}
+                <p class="text-gray-600 text-lg">No recent users to display.</p>
+                {% endif %}
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Recent Hire Inquiries</h2>
+                {% if recent_hires %}
+                <ul class="divide-y divide-gray-200">
+                    {% for hire in recent_hires %}
+                    <li class="py-4 hover:bg-gray-50 rounded-md px-2 transition duration-200">
+                        <p class="text-gray-900 font-medium text-lg">{{ hire.full_name }} ({{ hire.company_name or 'N/A' }})</p>
+                        <p class="text-sm text-gray-600">{{ hire.service_interest }} - {{ hire.submission_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="text-right mt-6">
+                    <a href="{{ url_for('view_hire_inquiries') }}" class="text-blue-600 hover:text-blue-800 font-semibold text-lg transition duration-300">View All Hire Inquiries &rarr;</a>
+                </div>
+                {% else %}
+                <p class="text-gray-600 text-lg">No recent hire inquiries to display.</p>
+                {% endif %}
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg mt-8">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Recent Contact Inquiries</h2>
+                {% if recent_contacts %}
+                <ul class="divide-y divide-gray-200">
+                    {% for contact in recent_contacts %}
+                    <li class="py-4 hover:bg-gray-50 rounded-md px-2 transition duration-200">
+                        <p class="text-gray-900 font-medium text-lg">{{ contact.full_name }}</p>
+                        <p class="text-sm text-gray-600">{{ contact.subject }} - {{ contact.submission_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="text-right mt-6">
+                    <a href="{{ url_for('view_contact_inquiries') }}" class="text-blue-600 hover:text-blue-800 font-semibold text-lg transition duration-300">View All Contact Inquiries &rarr;</a>
+                </div>
+                {% else %}
+                <p class="text-gray-600 text-lg">No recent contact inquiries to display.</p>
+                {% endif %}
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg mt-8">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Recent Testimonials</h2>
+                {% if recent_testimonials %}
+                <ul class="divide-y divide-gray-200">
+                    {% for testimonial in recent_testimonials %}
+                    <li class="py-4 hover:bg-gray-50 rounded-md px-2 transition duration-200">
+                        <p class="text-gray-900 font-medium text-lg">{{ testimonial.name }}</p>
+                        <p class="text-sm text-gray-600">Rating: {{ testimonial.rating }} stars - {{ testimonial.submission_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="text-right mt-6">
+                    <a href="{{ url_for('view_testimonials') }}" class="text-blue-600 hover:text-blue-800 font-semibold text-lg transition duration-300">View All Testimonials &rarr;</a>
+                </div>
+                {% else %}
+                <p class="text-gray-600 text-lg">No recent testimonials to display.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
