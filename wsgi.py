@@ -8,7 +8,7 @@ sys.path.insert(0, current_dir)
 
 # Import your Flask application instance
 # Assuming your Flask app is named 'app' in app.py
-from app import app as application
+from sofe import app as application
 
 # This 'application' variable is what WSGI servers look for.
 # It should be the Flask app instance.
